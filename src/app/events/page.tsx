@@ -1,0 +1,57 @@
+import React from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
+import { events } from "@/data/events";
+
+export default function EventsPage() {
+  return (
+    <main className="min-h-screen bg-brand-white">
+      <Header />
+      <PageHero
+        label="Major Events"
+        heading="Celebrate India"
+        subheading="Plan your trip around India's incredible festivals and events — each one a world unto itself."
+      />
+
+      <section className="bg-brand-white py-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="font-sans text-brand-dark/70 text-lg md:text-xl leading-relaxed">
+            India's festival calendar is among the world's most vibrant. From Holi to Diwali, these events are not just celebrations — they are windows into the soul of an ancient civilization.
+          </p>
+        </div>
+      </section>
+
+      <section className="bg-brand-offwhite py-16 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+          {events.map((event) => (
+            <div key={event.slug} className="bg-brand-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow group">
+              <div className={`${event.color} p-10 flex items-end justify-between min-h-[200px]`}>
+                <div className="text-6xl">{event.icon}</div>
+                <div className="text-right">
+                  <p className="text-brand-white/60 font-sans text-xs font-bold uppercase tracking-widest">{event.location}</p>
+                  <p className="text-brand-white font-heading text-2xl font-bold uppercase tracking-wide">{event.month}</p>
+                </div>
+              </div>
+              <div className="p-8 group-hover:bg-brand-dark transition-colors duration-300">
+                <p className="text-brand-rust group-hover:text-brand-sand font-sans font-bold uppercase tracking-widest text-xs mb-3 transition-colors">{event.tagline}</p>
+                <h2 className="font-heading text-3xl font-black uppercase tracking-tight text-brand-dark group-hover:text-brand-white mb-4 transition-colors">{event.name}</h2>
+                <p className="font-sans text-brand-dark/60 group-hover:text-brand-white/60 text-sm leading-relaxed transition-colors">{event.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-brand-dark py-24 px-6 text-center">
+        <p className="text-brand-rust font-sans font-bold uppercase tracking-widest text-sm mb-6">Plan Around a Festival</p>
+        <h2 className="font-heading text-5xl font-black uppercase tracking-tighter text-brand-white mb-8">Time Your<br />Perfect Trip</h2>
+        <a href="/plan" className="inline-block bg-brand-rust hover:bg-brand-rust/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold text-lg transition-colors">
+          Plan A Trip →
+        </a>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}

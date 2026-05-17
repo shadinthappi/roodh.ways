@@ -1,0 +1,50 @@
+import React from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
+import ExperienceTile from "@/components/ExperienceTile";
+import { experiences } from "@/data/experiences";
+
+export default function ExperiencesPage() {
+  return (
+    <main className="min-h-screen bg-brand-white">
+      <Header />
+      <PageHero
+        label="Travel Your Way"
+        heading="Experiences"
+        subheading="Every traveller is different. Find the experience that speaks to your soul."
+      />
+
+      {/* Intro */}
+      <section className="bg-brand-white py-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="font-sans text-brand-dark/70 text-lg md:text-xl leading-relaxed">
+            Whether you seek ancient temples or alpine adventures, sun-drenched beaches or misty hill stations — India has an experience designed just for you. Choose your style and let us guide the way.
+          </p>
+        </div>
+      </section>
+
+      {/* Experience Tiles Grid */}
+      <section className="bg-brand-offwhite py-16 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {experiences.map((exp) => (
+            <ExperienceTile key={exp.slug} {...exp} />
+          ))}
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="bg-brand-dark py-24 px-6 text-center">
+        <p className="text-brand-rust font-sans font-bold uppercase tracking-widest text-sm mb-6">Not Sure Where to Start?</p>
+        <h2 className="font-heading text-5xl md:text-6xl font-black uppercase tracking-tighter text-brand-white mb-8">
+          Let Us Build<br />Your Trip
+        </h2>
+        <a href="/plan" className="inline-block bg-brand-rust hover:bg-brand-rust/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold text-lg transition-colors">
+          Plan A Trip →
+        </a>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}
