@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 
+// Trigger fresh Vercel build with updated Sanity environment variables
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
