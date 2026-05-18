@@ -3,9 +3,29 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
-import { routes } from "@/data/routes";
+import { sanityFetch } from "@/sanity/client";
+import { groq } from "next-sanity";
+import { urlFor } from "@/sanity/image";
+import Image from "next/image";
 
-export default function RoutesPage() {
+export const revalidate = 60; // revalidate every minute
+
+export default async function RoutesPage() {
+  const query = groq`*[_type == "route" && isPublished == true] | order(name asc) {
+    name,
+    "slug": slug.current,
+    tagline,
+    difficulty,
+    color,
+    description,
+    duration,
+    distance,
+    bestTime,
+    mainImage
+  }`;
+  
+  const routes = await sanityFetch<any[]>(query);
+
   return (
     <main className="min-h-screen bg-brand-white">
       <Header />
@@ -34,14 +54,18 @@ export default function RoutesPage() {
               className="group flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-shadow bg-brand-white"
             >
               {/* Image Placeholder */}
-              <div className={`w-full md:w-2/5 min-h-[260px] ${route.color} relative flex items-center justify-center shrink-0`}>
-                <p className="text-brand-white/20 font-heading text-xl uppercase tracking-widest">[ Route Photo ]</p>
+              <div className={`w-full md:w-2/5 min-h-[260px] ${route.color || "bg-brand-rust"} relative flex items-center justify-center shrink-0`}>
+                {route.mainImage ? (
+                  <Image src={urlFor(route.mainImage).url()} alt={route.name} fill className="object-cover" />
+                ) : (
+                  <p className="text-brand-white/20 font-heading text-xl uppercase tracking-widest">[ Route Photo ]</p>
+                )}
                 {/* Difficulty badge */}
-                <span className="absolute top-4 left-4 bg-brand-white/20 backdrop-blur text-brand-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full font-sans">
+                <span className="absolute top-4 left-4 bg-brand-white/20 backdrop-blur text-brand-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full font-sans z-10">
                   {route.difficulty}
                 </span>
                 {/* Number */}
-                <span className="absolute bottom-4 right-4 font-heading text-8xl font-black text-brand-white/10 leading-none select-none">
+                <span className="absolute bottom-4 right-4 font-heading text-8xl font-black text-brand-white/10 leading-none select-none z-10">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
@@ -52,7 +76,7 @@ export default function RoutesPage() {
                 <h2 className="font-heading text-4xl md:text-5xl font-black uppercase tracking-tighter text-brand-dark group-hover:text-brand-white mb-4 transition-colors leading-none">
                   {route.name}
                 </h2>
-                <p className="font-sans text-brand-dark/60 group-hover:text-brand-white/60 text-sm leading-relaxed mb-6 max-w-xl transition-colors">
+                <p className="font-sans text-brand-dark/60 group-hover:text-brand-white/60 text-sm leading-relaxed mb-6 max-w-xl transition-colors line-clamp-3">
                   {route.description}
                 </p>
                 {/* Meta chips */}

@@ -3,9 +3,24 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import ExperienceTile from "@/components/ExperienceTile";
-import { experiences } from "@/data/experiences";
+import { sanityFetch } from "@/sanity/client";
+import { groq } from "next-sanity";
 
-export default function ExperiencesPage() {
+export const revalidate = 60; // revalidate every minute
+
+export default async function ExperiencesPage() {
+  const query = groq`*[_type == "experience" && isPublished == true] | order(name asc) {
+    name,
+    "slug": slug.current,
+    tagline,
+    icon,
+    color,
+    description,
+    highlights
+  }`;
+  
+  const experiences = await sanityFetch<any[]>(query);
+
   return (
     <main className="min-h-screen bg-brand-white">
       <Header />

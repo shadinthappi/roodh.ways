@@ -3,27 +3,52 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { stories } from "@/data/stories";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import { sanityFetch } from "@/sanity/client";
+import { groq } from "next-sanity";
+import { urlFor } from "@/sanity/image";
+import Image from "next/image";
 
-export function generateStaticParams() {
-  return stories.map((s) => ({ slug: s.slug }));
+export async function generateStaticParams() {
+  const query = groq`*[_type == "story"] { "slug": slug.current }`;
+  const slugs = await sanityFetch<{ slug: string }[]>(query);
+  return slugs;
 }
+
+export const revalidate = 60;
 
 export default async function StoryDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const story = stories.find((s) => s.slug === slug);
+  
+  const storyQuery = groq`*[_type == "story" && slug.current == $slug][0] {
+    title,
+    "slug": slug.current,
+    excerpt,
+    category,
+    readTime,
+    color,
+    mainImage
+  }`;
+  const story = await sanityFetch<any>(storyQuery, { slug });
+  
   if (!story) notFound();
 
-  const related = stories.filter((s) => s.slug !== story.slug).slice(0, 3);
+  const relatedQuery = groq`*[_type == "story" && slug.current != $slug && isPublished == true][0...3] {
+    title,
+    "slug": slug.current,
+    category,
+    color,
+    mainImage
+  }`;
+  const related = await sanityFetch<any[]>(relatedQuery, { slug: story.slug });
 
   return (
     <main className="min-h-screen bg-brand-white">
       <Header />
 
       {/* Hero */}
-      <section className={`w-full ${story.color} pt-36 pb-24 px-6`}>
-        <div className="max-w-4xl mx-auto">
+      <section className={`w-full ${story.color || "bg-brand-rust"} pt-36 pb-24 px-6 relative`}>
+        <div className="max-w-4xl mx-auto relative z-10">
           <span className="text-brand-white/60 font-sans font-bold uppercase tracking-widest text-xs mb-6 block">{story.category} · {story.readTime}</span>
           <h1 className="font-heading font-black text-5xl md:text-7xl uppercase tracking-tighter text-brand-white leading-none mb-8">
             {story.title}
@@ -35,9 +60,13 @@ export default async function StoryDetailPage({ params }: { params: Promise<{ sl
       {/* Article Body */}
       <section className="bg-brand-white py-20 px-6">
         <div className="max-w-3xl mx-auto">
-          {/* Placeholder image */}
-          <div className={`w-full h-80 ${story.color} rounded-2xl mb-12 flex items-center justify-center`}>
-            <p className="text-brand-white/20 font-heading text-xl uppercase tracking-widest">[ Featured Photo ]</p>
+          {/* Featured image */}
+          <div className={`w-full h-80 ${story.color || "bg-brand-rust"} rounded-2xl mb-12 flex items-center justify-center relative overflow-hidden`}>
+            {story.mainImage ? (
+              <Image src={urlFor(story.mainImage).url()} alt={story.title} fill className="object-cover" />
+            ) : (
+              <p className="text-brand-white/20 font-heading text-xl uppercase tracking-widest">[ Featured Photo ]</p>
+            )}
           </div>
 
           {/* Body content placeholder */}
@@ -74,24 +103,30 @@ export default async function StoryDetailPage({ params }: { params: Promise<{ sl
       </section>
 
       {/* Related Stories */}
-      <section className="bg-brand-offwhite py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="font-heading text-5xl uppercase font-black tracking-tighter text-brand-dark mb-10">More Stories</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {related.map((s) => (
-              <Link key={s.slug} href={`/stories/${s.slug}`} className="group block rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-brand-white">
-                <div className={`w-full h-44 ${s.color} flex items-center justify-center`}>
-                  <p className="text-brand-white/20 font-heading text-sm uppercase tracking-widest">[ Photo ]</p>
-                </div>
-                <div className="p-6 group-hover:bg-brand-dark transition-colors duration-300">
-                  <span className="text-brand-rust group-hover:text-brand-sand font-sans font-bold uppercase tracking-widest text-xs transition-colors">{s.category}</span>
-                  <h3 className="font-heading text-lg font-black uppercase tracking-tight text-brand-dark group-hover:text-brand-white mt-2 leading-tight transition-colors">{s.title}</h3>
-                </div>
-              </Link>
-            ))}
+      {related.length > 0 && (
+        <section className="bg-brand-offwhite py-20 px-6">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="font-heading text-5xl uppercase font-black tracking-tighter text-brand-dark mb-10">More Stories</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {related.map((s) => (
+                <Link key={s.slug} href={`/stories/${s.slug}`} className="group block rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-brand-white flex flex-col h-full">
+                  <div className={`w-full h-44 ${s.color || "bg-brand-rust"} relative flex items-center justify-center shrink-0`}>
+                    {s.mainImage ? (
+                      <Image src={urlFor(s.mainImage).url()} alt={s.title} fill className="object-cover" />
+                    ) : (
+                      <p className="text-brand-white/20 font-heading text-sm uppercase tracking-widest">[ Photo ]</p>
+                    )}
+                  </div>
+                  <div className="p-6 group-hover:bg-brand-dark transition-colors duration-300 flex-grow flex flex-col">
+                    <span className="text-brand-rust group-hover:text-brand-sand font-sans font-bold uppercase tracking-widest text-xs transition-colors">{s.category}</span>
+                    <h3 className="font-heading text-lg font-black uppercase tracking-tight text-brand-dark group-hover:text-brand-white mt-2 leading-tight transition-colors">{s.title}</h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <NewsletterSignup />
       <Footer />

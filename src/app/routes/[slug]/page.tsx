@@ -3,28 +3,62 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { routes } from "@/data/routes";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import { sanityFetch } from "@/sanity/client";
+import { groq } from "next-sanity";
+import { urlFor } from "@/sanity/image";
+import Image from "next/image";
 
-export function generateStaticParams() {
-  return routes.map((r) => ({ slug: r.slug }));
+export async function generateStaticParams() {
+  const query = groq`*[_type == "route"] { "slug": slug.current }`;
+  const slugs = await sanityFetch<{ slug: string }[]>(query);
+  return slugs;
 }
+
+export const revalidate = 60;
 
 export default async function RouteDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const route = routes.find((r) => r.slug === slug);
+  
+  const routeQuery = groq`*[_type == "route" && slug.current == $slug][0] {
+    name,
+    "slug": slug.current,
+    tagline,
+    difficulty,
+    color,
+    description,
+    duration,
+    distance,
+    bestTime,
+    stops,
+    highlights,
+    mainImage
+  }`;
+  const route = await sanityFetch<any>(routeQuery, { slug });
+  
   if (!route) notFound();
 
-  const related = routes.filter((r) => r.slug !== route.slug).slice(0, 2);
+  const relatedQuery = groq`*[_type == "route" && slug.current != $slug && isPublished == true][0...2] {
+    name,
+    "slug": slug.current,
+    tagline,
+    duration,
+    color,
+    mainImage
+  }`;
+  const related = await sanityFetch<any[]>(relatedQuery, { slug: route.slug });
 
   return (
     <main className="min-h-screen bg-brand-white">
       <Header />
 
       {/* Hero */}
-      <section className={`w-full ${route.color} pt-36 pb-24 px-6 relative overflow-hidden`}>
+      <section className={`w-full ${route.color || "bg-brand-rust"} pt-36 pb-24 px-6 relative overflow-hidden`}>
         <div className="absolute inset-0 opacity-10"
           style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "40px 40px" }} />
+        {route.mainImage && (
+          <Image src={urlFor(route.mainImage).url()} alt={route.name} fill className="object-cover absolute inset-0 z-0 opacity-20" />
+        )}
         <div className="max-w-7xl mx-auto relative z-10">
           <p className="text-brand-white/60 font-sans font-bold uppercase tracking-widest text-sm mb-4">{route.tagline}</p>
           <h1 className="font-heading font-black text-6xl md:text-8xl uppercase tracking-tighter text-brand-white leading-none mb-6">
@@ -39,7 +73,7 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
               { label: "Difficulty", val: route.difficulty },
               { label: "Best Time", val: route.bestTime },
             ].map((m) => (
-              <div key={m.label} className="bg-brand-white/10 border border-brand-white/20 px-6 py-3 rounded-full">
+              <div key={m.label} className="bg-brand-white/10 border border-brand-white/20 px-6 py-3 rounded-full backdrop-blur-sm">
                 <p className="font-sans text-brand-white/50 text-xs uppercase tracking-widest">{m.label}</p>
                 <p className="font-heading text-brand-white font-bold text-lg uppercase">{m.val}</p>
               </div>
@@ -55,7 +89,7 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
           <div className="flex flex-col md:flex-row gap-0 relative">
             {/* Connecting line */}
             <div className="hidden md:block absolute top-6 left-6 right-6 h-0.5 bg-brand-rust/30" />
-            {route.stops.map((stop, i) => (
+            {route.stops?.map((stop: string, i: number) => (
               <div key={i} className="flex md:flex-col items-center md:items-start gap-6 md:gap-4 flex-1 relative pb-8 md:pb-0">
                 {/* Circle */}
                 <div className="shrink-0 w-12 h-12 rounded-full bg-brand-rust border-4 border-brand-dark flex items-center justify-center font-heading font-black text-brand-white text-sm z-10">
@@ -63,7 +97,7 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
                 </div>
                 <div>
                   <h3 className="font-heading text-xl font-bold uppercase tracking-wide text-brand-white">{stop}</h3>
-                  <div className={`mt-3 w-full md:w-auto h-28 md:h-36 ${route.color} rounded-xl flex items-center justify-center`}>
+                  <div className={`mt-3 w-full md:w-auto h-28 md:h-36 ${route.color || "bg-brand-rust"} rounded-xl flex items-center justify-center`}>
                     <p className="text-brand-white/20 font-heading text-xs uppercase tracking-widest">[ Photo ]</p>
                   </div>
                 </div>
@@ -78,7 +112,7 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
         <div className="max-w-7xl mx-auto">
           <h2 className="font-heading text-5xl uppercase font-black tracking-tighter text-brand-dark mb-10">Highlights</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {route.highlights.map((h, i) => (
+            {route.highlights?.map((h: string, i: number) => (
               <div key={i} className="bg-brand-white p-6 rounded-2xl shadow-sm border border-brand-dark/5 flex items-start gap-4">
                 <div className="w-8 h-8 rounded-full bg-brand-rust flex items-center justify-center shrink-0">
                   <span className="text-brand-white font-bold font-sans text-xs">{i + 1}</span>
@@ -97,10 +131,15 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
             <h2 className="font-heading text-5xl uppercase font-black tracking-tighter text-brand-dark mb-10">More Routes</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {related.map((r) => (
-                <Link key={r.slug} href={`/routes/${r.slug}`} className={`${r.color} rounded-2xl p-10 flex flex-col justify-end min-h-[240px] group hover:opacity-90 transition-opacity`}>
-                  <p className="font-sans text-brand-white/60 text-xs font-bold uppercase tracking-widest mb-2">{r.tagline} · {r.duration}</p>
-                  <h3 className="font-heading text-4xl font-black uppercase tracking-tighter text-brand-white">{r.name}</h3>
-                  <p className="mt-3 text-brand-white font-sans text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">View Route →</p>
+                <Link key={r.slug} href={`/routes/${r.slug}`} className={`${r.color || "bg-brand-rust"} rounded-2xl p-10 flex flex-col justify-end min-h-[240px] group hover:opacity-90 transition-opacity relative overflow-hidden`}>
+                  {r.mainImage && (
+                    <Image src={urlFor(r.mainImage).url()} alt={r.name} fill className="object-cover absolute inset-0 z-0 opacity-40 group-hover:opacity-50 transition-opacity" />
+                  )}
+                  <div className="relative z-10">
+                    <p className="font-sans text-brand-white/60 text-xs font-bold uppercase tracking-widest mb-2">{r.tagline} · {r.duration}</p>
+                    <h3 className="font-heading text-4xl font-black uppercase tracking-tighter text-brand-white">{r.name}</h3>
+                    <p className="mt-3 text-brand-white font-sans text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">View Route →</p>
+                  </div>
                 </Link>
               ))}
             </div>
