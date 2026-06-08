@@ -9,6 +9,7 @@ export const siteSettingsType = defineType({
   groups: [
     { name: 'heroes', title: 'Page Hero Images' },
     { name: 'chatbot', title: 'Chatbot Settings' },
+    { name: 'socialFeed', title: 'Social Feed' },
   ],
   fields: [
     defineField({
@@ -114,6 +115,28 @@ export const siteSettingsType = defineType({
       title: 'WhatsApp URL / Number',
       type: 'string',
       description: 'Format: https://wa.me/1234567890 or just a phone link',
+    }),
+    defineField({
+      name: 'socialFeedImages',
+      title: 'Social Feed Images',
+      type: 'array',
+      group: 'socialFeed',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'image', type: 'image', title: 'Image', options: { hotspot: true } },
+            { name: 'tag', type: 'string', title: 'Tag / Location (e.g. Rajasthan)' },
+            { name: 'color', type: 'string', title: 'Fallback Color (Tailwind class, e.g. bg-[#C0392B])', initialValue: 'bg-brand-blue' }
+          ],
+          preview: {
+            select: {
+              title: 'tag',
+              media: 'image'
+            }
+          }
+        }
+      ]
     }),
   ],
   preview: {
