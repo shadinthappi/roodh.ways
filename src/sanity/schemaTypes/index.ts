@@ -12,6 +12,7 @@ import { siteSettingsType } from "./siteSettingsType";
 import { calendarEventType } from "./calendarEventType";
 import { aiLogType } from "./aiLogType";
 import { agentTaskType } from "./agentTaskType";
+import { vendorType } from "./vendorType";
 import { SchemaTypeDefinition } from "sanity";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
@@ -30,5 +31,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     calendarEventType,
     aiLogType,
     agentTaskType,
+    vendorType,
   ],
 };
