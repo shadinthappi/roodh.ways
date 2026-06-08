@@ -87,7 +87,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   const menuItems = [
-    { label: "Overview", path: "/admin" },
+    { label: "Dashboard", path: "/admin" },
+    { label: "ERP & CRM", path: "/admin/erp" },
     { label: "Calendar", path: "/admin/calendar" },
     { label: "Bookings", path: "/admin/bookings" },
     { label: "Destinations", path: "/admin/destinations" },
@@ -156,7 +157,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <main className="flex-1 flex flex-col overflow-hidden">
         <header className="h-16 border-b border-brand-dark/10 bg-brand-white flex items-center justify-between px-8 shrink-0">
           <h1 className="text-lg font-heading font-bold uppercase tracking-wide text-brand-dark">
-            {menuItems.find((item) => item.path === pathname)?.label || "Overview"}
+            {menuItems.find((item) => item.path === pathname)?.label || "Dashboard"}
           </h1>
           <Link
             href="/"
