@@ -61,6 +61,10 @@ export default function AdminOverview() {
           const tasksData = await tasksRes.json();
           setTasks(tasksData);
         }
+
+        // Passively trigger CRM cleanup in the background
+        fetch("/api/admin/cleanup", { method: "POST" }).catch(() => {});
+        
       } catch (err) {
         console.error("Failed to load dashboard overview data", err);
       } finally {
