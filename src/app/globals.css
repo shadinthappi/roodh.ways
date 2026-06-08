@@ -23,11 +23,11 @@ body {
   color: var(--color-brand-dark);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  cursor: url('/cursor.png') 24 24, auto;
+  cursor: url('/cursor.png') 32 32, auto;
 }
 
 a, button, [role="button"] {
-  cursor: url('/cursor.png') 24 24, pointer !important;
+  cursor: url('/cursor.png') 32 32, pointer !important;
 }
 
 ::selection {
