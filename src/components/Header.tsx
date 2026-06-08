@@ -44,8 +44,9 @@ export default function Header() {
       <header className={`w-full py-4 transition-all duration-300 ${scrolled ? "bg-brand-dark shadow-lg" : "bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-brand-white">
           {/* Logo */}
-          <Link href="/" className="font-heading text-3xl font-bold uppercase tracking-wide drop-shadow-lg">
-            roodh.ways
+          <Link href="/" className="flex items-center gap-3 font-heading text-3xl font-bold uppercase tracking-wide drop-shadow-lg">
+            <Image src="/logo-white.png" alt="Roodh.ways Logo" width={32} height={32} className="object-contain" />
+            <span className="hidden sm:inline-block">roodh.ways</span>
           </Link>
 
           {/* Desktop Nav */}

@@ -13,6 +13,7 @@ const oswald = Oswald({
 });
 
 import AnalyticsTracker from "@/components/AnalyticsTracker";
+import FloatingLogo from "@/components/FloatingLogo";
 
 export const metadata: Metadata = {
   title: "roodh.ways - India The Majestic",
@@ -32,6 +33,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-brand-white text-brand-dark">
         <AnalyticsTracker />
+        <FloatingLogo />
         {children}
       </body>
     </html>
