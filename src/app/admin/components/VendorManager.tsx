@@ -48,6 +48,24 @@ export default function VendorManager() {
     }
   };
 
+  const handleDeleteVendor = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this vendor?")) return;
+
+    // Optimistic update
+    setVendors(vendors.filter(v => v._id !== id));
+
+    try {
+      await fetch("/api/admin/mutate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mutations: [{ delete: { id } }] })
+      });
+    } catch (e) {
+      alert("Failed to delete vendor");
+      fetchVendors(); // revert
+    }
+  };
+
   if (isLoading) return <div className="py-20 text-center text-sm font-bold uppercase text-brand-dark/50">Loading Vendors...</div>;
 
   return (
@@ -91,6 +109,7 @@ export default function VendorManager() {
               <th className="py-3 px-4 text-xs font-black uppercase tracking-widest text-brand-dark/50">Category</th>
               <th className="py-3 px-4 text-xs font-black uppercase tracking-widest text-brand-dark/50">Contact</th>
               <th className="py-3 px-4 text-xs font-black uppercase tracking-widest text-brand-dark/50">Rates</th>
+              <th className="py-3 px-4 text-xs font-black uppercase tracking-widest text-brand-dark/50 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -116,6 +135,15 @@ export default function VendorManager() {
                   ) : (
                     <span className="text-brand-dark/30 text-[10px] uppercase font-bold tracking-wider">Not Added</span>
                   )}
+                </td>
+                <td className="py-4 px-4 text-right">
+                  <button 
+                    onClick={() => handleDeleteVendor(v._id)}
+                    title="Delete Vendor"
+                    className="inline-flex items-center justify-center w-8 h-8 rounded bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+                  >
+                    ✕
+                  </button>
                 </td>
               </tr>
             ))}

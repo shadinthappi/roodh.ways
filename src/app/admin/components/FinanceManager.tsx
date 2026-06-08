@@ -100,6 +100,21 @@ export default function FinanceManager({ leads }: { leads: any[] }) {
     }
   };
 
+  const handleDeleteLedger = async (id: string) => {
+    if (!window.confirm("Are you sure you want to permanently delete this ledger record? This action cannot be undone.")) return;
+
+    try {
+      await fetch("/api/admin/mutate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mutations: [{ delete: { id } }] })
+      });
+      setActiveLeads(activeLeads.filter(l => l._id !== id));
+    } catch (e) {
+      alert("Failed to delete ledger");
+    }
+  };
+
   const generateInvoice = (lead: any) => {
     const doc = new jsPDF();
     const items = lead.costItems || [];
@@ -302,6 +317,13 @@ export default function FinanceManager({ leads }: { leads: any[] }) {
                         className="inline-flex items-center justify-center w-7 h-7 rounded bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors"
                       >
                         💬
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteLedger(lead._id)}
+                        title="Delete Ledger"
+                        className="inline-flex items-center justify-center w-7 h-7 rounded bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+                      >
+                        ✕
                       </button>
                     </td>
                   </tr>
