@@ -40,11 +40,11 @@ export default async function Home() {
       <IntroBlock />
       <RegionMap />
       <ScrollShowcase />
-      <ArticleCarousel stories={stories} />
+      <DestinationStrips />
       <TestimonialsSection />
       <VisaFaq />
       <SocialFeed instagramUrl={settings?.instagramUrl} />
-      <DestinationStrips />
+      <ArticleCarousel stories={stories} />
 
       <Footer />
     </main>
