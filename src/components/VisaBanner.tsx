@@ -3,16 +3,16 @@ import Image from "next/image";
 
 export default function VisaBanner() {
   return (
-    <section className="w-full bg-brand-white flex flex-col md:flex-row overflow-hidden border-t-8 border-brand-rust">
+    <section className="w-full bg-brand-white flex flex-col md:flex-row overflow-hidden border-t-8 border-brand-blue">
       {/* Text Block */}
-      <div className="w-full md:w-1/3 bg-brand-rust text-brand-white p-12 lg:p-20 flex flex-col justify-center">
+      <div className="w-full md:w-1/3 bg-brand-blue text-brand-white p-12 lg:p-20 flex flex-col justify-center">
         <h2 className="font-heading text-4xl lg:text-6xl uppercase font-bold tracking-wide mb-6">
           E-Visa & Entry Details
         </h2>
         <p className="font-sans text-lg lg:text-xl font-medium mb-10 opacity-90">
           Everything you need to know about traveling to India, from e-visas to customs requirements.
         </p>
-        <button className="self-start border-2 border-brand-white text-brand-white hover:bg-brand-white hover:text-brand-rust px-8 py-3 rounded-full font-heading uppercase tracking-widest font-bold transition-colors">
+        <button className="self-start border-2 border-brand-white text-brand-white hover:bg-brand-white hover:text-brand-blue px-8 py-3 rounded-full font-heading uppercase tracking-widest font-bold transition-colors">
           Learn More
         </button>
       </div>

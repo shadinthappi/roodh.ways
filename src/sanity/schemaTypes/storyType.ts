@@ -13,6 +13,7 @@ export const storyType = defineType({
     }),
     defineField({ name: "readTime", title: "Read Time", type: "string", description: 'e.g. "6 min read"' }),
     defineField({ name: "excerpt", title: "Excerpt", type: "text", rows: 3 }),
+    defineField({ name: "themeColor", title: "Theme Color (hex)", type: "string" }),
     defineField({
       name: "body", title: "Article Body", type: "array",
       of: [

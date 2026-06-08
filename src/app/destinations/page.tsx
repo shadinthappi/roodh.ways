@@ -5,6 +5,7 @@ import PageHero from "@/components/PageHero";
 import DestinationsClient from "./DestinationsClient";
 import { sanityFetch } from "@/sanity/client";
 import { groq } from "next-sanity";
+import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 
 export const revalidate = 60; // revalidate every minute
 
@@ -22,7 +23,10 @@ export default async function DestinationsPage() {
     mainImage
   }`;
   
-  const destinations = await sanityFetch<any[]>(query);
+  const [destinations, settings] = await Promise.all([
+    sanityFetch<any[]>(query),
+    sanityFetch<any>(SITE_SETTINGS_QUERY)
+  ]);
 
   return (
     <main className="min-h-screen bg-brand-white">
@@ -31,6 +35,7 @@ export default async function DestinationsPage() {
         label="Explore India"
         heading="Destinations"
         subheading="From the heights of the Himalayas to the shores of the Indian Ocean — find your perfect place."
+        bgImage={settings?.destinationsHero || "/hero_destinations.png"}
       />
 
       <DestinationsClient destinations={destinations} />

@@ -3,16 +3,19 @@
 @theme inline {
   --color-brand-dark: #1A1A1A;
   --color-brand-rust: #B85C38;
+  --color-brand-blue: #6d4527;
+  --color-brand-blue-light: #8a5a35;
   --color-brand-sand: #EAD5C3;
   --color-brand-white: #FFFFFF;
   --color-brand-offwhite: #F5F5F5;
   
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-oswald);
+  --font-sans: var(--font-oswald);
+  --font-heading: var(--font-spartan);
 }
 
 html {
   scroll-behavior: smooth;
+  font-size: 112.5%;
 }
 
 body {
@@ -23,7 +26,7 @@ body {
 }
 
 ::selection {
-  background-color: var(--color-brand-rust);
+  background-color: var(--color-brand-blue);
   color: var(--color-brand-white);
 }
 
@@ -35,10 +38,9 @@ body {
   background: var(--color-brand-offwhite);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-brand-rust);
+  background: var(--color-brand-blue);
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-brand-dark);
 }
-

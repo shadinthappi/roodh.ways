@@ -8,6 +8,7 @@ export const destinationType = defineType({
     defineField({ name: "name", title: "Name", type: "string", validation: (r) => r.required() }),
     defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "name" }, validation: (r) => r.required() }),
     defineField({ name: "tagline", title: "Tagline", type: "string" }),
+    defineField({ name: "themeColor", title: "Theme Color (hex)", type: "string" }),
     defineField({
       name: "region", title: "Region", type: "string",
       options: { list: ["North India", "South India", "East India", "West India", "Islands"] },
@@ -29,6 +30,25 @@ export const destinationType = defineType({
     defineField({
       name: "galleryImages", title: "Gallery Images", type: "array",
       of: [{ type: "image", options: { hotspot: true } }],
+    }),
+    defineField({
+      name: "thingsToDo", title: "Things To Do", type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({ name: "title", title: "Title", type: "string", validation: (r) => r.required() }),
+            defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: "generalItinerary", 
+      title: "General Itinerary", 
+      type: "array",
+      description: "A day-by-day general itinerary for this destination.",
+      of: [{ type: "block" }],
     }),
     defineField({
       name: "mapCoordinates", title: "Map Coordinates", type: "object",

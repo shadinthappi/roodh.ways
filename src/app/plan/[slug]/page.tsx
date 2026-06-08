@@ -1,5 +1,6 @@
 import React from "react";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import NewsletterSignup from "@/components/NewsletterSignup";
@@ -42,11 +43,14 @@ export default async function ItineraryDetailPage({ params }: { params: Promise<
       <Header />
 
       {/* Hero */}
-      <section className={`w-full ${itinerary.themeColor || "bg-brand-rust"} pt-36 pb-24 px-6 relative overflow-hidden`}>
+      <section className={`w-full ${itinerary.themeColor || "bg-brand-blue"} pt-36 pb-24 px-6 relative overflow-hidden`}>
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "40px 40px" }} />
         {itinerary.coverImage && (
-          <Image src={urlFor(itinerary.coverImage).url()} alt={itinerary.title} fill className="object-cover absolute inset-0 z-0 opacity-30" />
+          <>
+            <Image src={urlFor(itinerary.coverImage).url()} alt={itinerary.title} fill unoptimized className="object-cover absolute inset-0 z-0" />
+            <div className="absolute inset-0 bg-brand-dark/40 z-0" />
+          </>
         )}
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="flex flex-wrap gap-4 mb-6">
@@ -64,9 +68,9 @@ export default async function ItineraryDetailPage({ params }: { params: Promise<
                  <p className="font-sans text-brand-white/60 text-xs font-bold uppercase tracking-widest mb-1">Starting from</p>
                  <p className="font-heading font-black text-4xl text-brand-white">₹{itinerary.priceFrom?.toLocaleString()}</p>
              </div>
-             <button className="bg-brand-white text-brand-dark hover:bg-brand-sand hover:text-brand-dark px-8 py-6 rounded-2xl font-heading uppercase tracking-wider font-bold transition-colors">
+             <Link href={`/plan/${itinerary.slug}/book`} className="bg-brand-white text-brand-dark hover:bg-brand-sand hover:text-brand-dark px-8 py-6 rounded-2xl font-heading uppercase tracking-wider font-bold transition-colors">
                  Book This Trip
-             </button>
+             </Link>
           </div>
         </div>
       </section>
@@ -78,7 +82,7 @@ export default async function ItineraryDetailPage({ params }: { params: Promise<
           <div className="flex flex-wrap gap-4 mb-16">
             {itinerary.stops?.map((stop: string, i: number) => (
               <div key={i} className="flex items-center gap-4">
-                <span className={`w-8 h-8 rounded-full ${itinerary.themeColor || "bg-brand-rust"} text-brand-white flex items-center justify-center font-bold text-sm`}>{i + 1}</span>
+                <span className={`w-8 h-8 rounded-full ${itinerary.themeColor || "bg-brand-blue"} text-brand-white flex items-center justify-center font-bold text-sm`}>{i + 1}</span>
                 <span className="font-heading text-2xl uppercase font-bold text-brand-dark">{stop}</span>
                 {i < itinerary.stops.length - 1 && (
                   <span className="text-brand-dark/20 text-2xl">→</span>
@@ -88,7 +92,7 @@ export default async function ItineraryDetailPage({ params }: { params: Promise<
           </div>
 
           <h2 className="font-heading text-4xl uppercase font-black tracking-tighter text-brand-dark mb-8">Day-by-Day Plan</h2>
-          <div className="prose prose-lg prose-headings:font-heading prose-headings:uppercase prose-headings:tracking-tighter prose-headings:font-black prose-p:font-sans prose-p:leading-relaxed prose-a:text-brand-rust max-w-none">
+          <div className="prose prose-lg prose-headings:font-heading prose-headings:uppercase prose-headings:tracking-tighter prose-headings:font-black prose-p:font-sans prose-p:leading-relaxed prose-a:text-brand-blue max-w-none">
             {itinerary.dayByDayPlan ? (
               <PortableText value={itinerary.dayByDayPlan} />
             ) : (

@@ -25,7 +25,7 @@ export default function ArticleCarousel() {
         {/* Header Row */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
-            <p className="text-brand-rust font-sans font-bold uppercase tracking-widest text-sm mb-4">Stories & Guides</p>
+            <p className="text-brand-blue font-sans font-bold uppercase tracking-widest text-sm mb-4">Stories & Guides</p>
             <h2 className="font-heading text-5xl md:text-6xl font-black uppercase tracking-tighter text-brand-dark leading-none">
               Explore Your<br />Way
             </h2>
@@ -62,7 +62,7 @@ export default function ArticleCarousel() {
                 <p className="font-sans text-sm text-brand-dark/60 group-hover:text-brand-white/70 transition-colors leading-relaxed">
                   {article.desc}
                 </p>
-                <div className="mt-4 text-brand-rust group-hover:text-brand-sand font-bold font-sans text-sm uppercase tracking-widest transition-colors">
+                <div className="mt-4 text-brand-blue group-hover:text-brand-sand font-bold font-sans text-sm uppercase tracking-widest transition-colors">
                   Read More →
                 </div>
               </div>

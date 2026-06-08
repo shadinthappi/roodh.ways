@@ -22,7 +22,7 @@ export default function SocialFeed() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
           <div>
             <FadeIn delay={0}>
-              <p className="text-brand-rust font-sans font-bold uppercase tracking-widest text-sm mb-4">#RoodhWays</p>
+              <p className="text-brand-blue font-sans font-bold uppercase tracking-widest text-sm mb-4">#RoodhWays</p>
             </FadeIn>
             <FadeIn delay={0.1}>
               <h2 className="font-heading text-5xl md:text-6xl font-black uppercase tracking-tighter text-brand-white leading-none">
@@ -51,7 +51,10 @@ export default function SocialFeed() {
                   <p className="text-brand-white/20 font-heading text-xs uppercase tracking-widest text-center px-2">{post.tag}</p>
                 </div>
                 <div className="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="text-brand-white text-2xl">📸</span>
+                  <svg className="w-8 h-8 text-brand-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
                 </div>
               </motion.div>
             </StaggerItem>

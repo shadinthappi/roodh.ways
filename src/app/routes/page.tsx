@@ -7,6 +7,7 @@ import { sanityFetch } from "@/sanity/client";
 import { groq } from "next-sanity";
 import { urlFor } from "@/sanity/image";
 import Image from "next/image";
+import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 
 export const revalidate = 60; // revalidate every minute
 
@@ -24,7 +25,10 @@ export default async function RoutesPage() {
     mainImage
   }`;
   
-  const routes = await sanityFetch<any[]>(query);
+  const [routes, settings] = await Promise.all([
+    sanityFetch<any[]>(query),
+    sanityFetch<any>(SITE_SETTINGS_QUERY)
+  ]);
 
   return (
     <main className="min-h-screen bg-brand-white">
@@ -33,6 +37,7 @@ export default async function RoutesPage() {
         label="Scenic Routes"
         heading="Drive India"
         subheading="Some of the world's most spectacular journeys unfold on Indian roads. Choose your route and start driving."
+        bgImage={settings?.routesHero || "/hero_routes.png"}
       />
 
       {/* Intro */}
@@ -54,9 +59,9 @@ export default async function RoutesPage() {
               className="group flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-shadow bg-brand-white"
             >
               {/* Image Placeholder */}
-              <div className={`w-full md:w-2/5 min-h-[260px] ${route.color || "bg-brand-rust"} relative flex items-center justify-center shrink-0`}>
+              <div className={`w-full md:w-2/5 min-h-[260px] ${route.color || "bg-brand-blue"} relative flex items-center justify-center shrink-0`}>
                 {route.mainImage ? (
-                  <Image src={urlFor(route.mainImage).url()} alt={route.name} fill className="object-cover" />
+                  <Image src={urlFor(route.mainImage).url()} alt={route.name} fill unoptimized className="object-cover" />
                 ) : (
                   <p className="text-brand-white/20 font-heading text-xl uppercase tracking-widest">[ Route Photo ]</p>
                 )}
@@ -72,7 +77,7 @@ export default async function RoutesPage() {
 
               {/* Content */}
               <div className="p-8 md:p-12 flex flex-col justify-center group-hover:bg-brand-dark transition-colors duration-300">
-                <p className="text-brand-rust group-hover:text-brand-sand font-sans font-bold uppercase tracking-widest text-xs mb-3 transition-colors">{route.tagline}</p>
+                <p className="text-brand-blue group-hover:text-brand-sand font-sans font-bold uppercase tracking-widest text-xs mb-3 transition-colors">{route.tagline}</p>
                 <h2 className="font-heading text-4xl md:text-5xl font-black uppercase tracking-tighter text-brand-dark group-hover:text-brand-white mb-4 transition-colors leading-none">
                   {route.name}
                 </h2>
@@ -87,7 +92,7 @@ export default async function RoutesPage() {
                     </span>
                   ))}
                 </div>
-                <div className="mt-6 text-brand-rust group-hover:text-brand-sand font-sans text-xs font-bold uppercase tracking-widest transition-colors">
+                <div className="mt-6 text-brand-blue group-hover:text-brand-sand font-sans text-xs font-bold uppercase tracking-widest transition-colors">
                   View Route →
                 </div>
               </div>

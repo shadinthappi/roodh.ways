@@ -1,66 +1,141 @@
-import React from "react";
+"use client";
 
-const regions = [
-  { name: "North India", desc: "Delhi · Agra · Jaipur · Varanasi", color: "bg-[#C0392B]", icon: "🏯" },
-  { name: "South India", desc: "Kerala · Tamil Nadu · Karnataka", color: "bg-[#16A085]", icon: "🌴" },
-  { name: "East India", desc: "Kolkata · Darjeeling · Odisha", color: "bg-[#8E44AD]", icon: "🍵" },
-  { name: "West India", desc: "Goa · Mumbai · Rajasthan", color: "bg-[#D35400]", icon: "🎪" },
-  { name: "North East", desc: "Assam · Meghalaya · Sikkim", color: "bg-[#27AE60]", icon: "🏔" },
-  { name: "Central India", desc: "Madhya Pradesh · Chhattisgarh", color: "bg-[#2980B9]", icon: "🐯" },
-];
+import React, { useState } from "react";
+import { STATES, REGION_COLORS, REGION_INFO } from "./indiaMapData";
+import { useRouter } from "next/navigation";
 
 export default function RegionMap() {
+  const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleMouseEnter = (region: string) => {
+    if (region && region !== "Unknown") {
+      setHoveredRegion(region);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRegion(null);
+  };
+
+  const handleRegionClick = (region: string) => {
+    if (region && region !== "Unknown") {
+      router.push(`/destinations?region=${encodeURIComponent(region)}`);
+    }
+  };
+
+  const regionsList = Object.keys(REGION_INFO);
+
   return (
     <section id="destinations" className="w-full bg-brand-offwhite py-24 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <p className="text-brand-rust font-sans font-bold uppercase tracking-widest text-sm mb-4">Explore by Region</p>
+          <p className="text-brand-blue font-sans font-bold uppercase tracking-widest text-sm mb-4">Explore by Region</p>
           <h2 className="font-heading text-5xl md:text-6xl font-black uppercase tracking-tighter text-brand-dark">
             Where Will You Go?
           </h2>
         </div>
 
-        {/* India Map Placeholder + Region Cards */}
+        {/* India Map + Region Cards */}
         <div className="flex flex-col lg:flex-row gap-12 items-center">
-          {/* Map Placeholder */}
-          <div className="w-full lg:w-1/2 aspect-square max-w-lg mx-auto bg-brand-sand rounded-3xl flex items-center justify-center relative overflow-hidden border-2 border-brand-sand">
-            <div className="absolute inset-0 flex items-center justify-center flex-col gap-4">
-              <div className="text-brand-dark/30 font-heading text-6xl">🗺</div>
-              <p className="text-brand-dark/40 font-heading text-xl uppercase tracking-widest">Interactive Map</p>
-              <p className="text-brand-dark/30 font-sans text-sm">[ India Map Placeholder ]</p>
-            </div>
-            {/* Decorative dots for regions */}
-            {[
-              { top: "20%", left: "35%", label: "Delhi" },
-              { top: "55%", left: "25%", label: "Mumbai" },
-              { top: "70%", left: "40%", label: "Bengaluru" },
-              { top: "30%", left: "55%", label: "Kolkata" },
-              { top: "15%", left: "45%", label: "Himalaya" },
-            ].map((pin) => (
-              <div key={pin.label} className="absolute flex flex-col items-center group cursor-pointer" style={{ top: pin.top, left: pin.left }}>
-                <div className="w-4 h-4 rounded-full bg-brand-rust border-2 border-brand-white shadow-lg group-hover:scale-150 transition-transform" />
-                <span className="mt-1 text-brand-dark font-sans text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity bg-brand-white px-2 py-1 rounded shadow whitespace-nowrap">
-                  {pin.label}
-                </span>
-              </div>
-            ))}
+          {/* Map */}
+          <div className="w-full lg:w-1/2 aspect-square max-w-lg mx-auto bg-brand-sand rounded-3xl flex items-center justify-center relative overflow-hidden border-2 border-brand-sand shadow-inner p-4">
+            <svg
+              viewBox="0 0 612 696"
+              className="w-full h-full drop-shadow-xl transition-all duration-500"
+              style={{ filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.1))" }}
+            >
+              {STATES.map((state) => {
+                const isHovered = hoveredRegion === state.region;
+                const baseColor = REGION_COLORS[state.region] || "#cbd5e1";
+                const fillOpacity = hoveredRegion ? (isHovered ? 1 : 0.4) : 0.9;
+                
+                return (
+                  <path
+                    key={state.id}
+                    d={state.d}
+                    fill={baseColor}
+                    stroke="#ffffff"
+                    strokeWidth={isHovered ? "2.5" : "1.5"}
+                    strokeLinejoin="round"
+                    style={{
+                      fillOpacity,
+                      transition: "fill-opacity 0.3s ease, stroke-width 0.3s ease",
+                      cursor: "pointer",
+                    }}
+                    onMouseEnter={() => handleMouseEnter(state.region)}
+                    onMouseLeave={handleMouseLeave}
+                    onClick={() => handleRegionClick(state.region)}
+                    className="hover:brightness-110"
+                  >
+                    <title>{`${state.name} (${state.region})`}</title>
+                  </path>
+                );
+              })}
+            </svg>
           </div>
 
           {/* Region Cards Grid */}
           <div className="w-full lg:w-1/2 grid grid-cols-2 md:grid-cols-3 gap-4">
-            {regions.map((region) => (
-              <button
-                key={region.name}
-                className={`${region.color} text-brand-white p-6 rounded-2xl flex flex-col items-start gap-3 hover:scale-105 transition-transform shadow-md text-left`}
-              >
-                <span className="text-3xl">{region.icon}</span>
-                <div>
-                  <h3 className="font-heading text-lg font-bold uppercase tracking-wide leading-tight">{region.name}</h3>
-                  <p className="font-sans text-xs text-brand-white/80 mt-1">{region.desc}</p>
-                </div>
-              </button>
-            ))}
+            {regionsList.map((regionName) => {
+              const info = REGION_INFO[regionName];
+              const color = REGION_COLORS[regionName];
+              const isHovered = hoveredRegion === regionName;
+              const opacityClass = hoveredRegion
+                ? isHovered
+                  ? "opacity-100 scale-105 shadow-xl z-10"
+                  : "opacity-50 scale-95"
+                : "opacity-100 hover:-translate-y-1";
+              
+              return (
+                <button
+                  key={regionName}
+                  onMouseEnter={() => handleMouseEnter(regionName)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleRegionClick(regionName)}
+                  style={{ backgroundColor: color }}
+                  className={`text-brand-white p-6 rounded-2xl flex flex-col items-start gap-3 transition-all duration-300 shadow-md text-left ${opacityClass}`}
+                >
+                  <span className="text-brand-white">
+                    {info.icon === "north" && (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-4a3 3 0 0 1 6 0v4M12 4v4"></path>
+                      </svg>
+                    )}
+                    {info.icon === "south" && (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M12 22V10M12 10c2-2 5-2 7 0M12 12c-2-2-5-2-7 0M12 10c1.5-3.5 4-5.5 7-5.5M12 12c-1.5-3.5-4-5.5-7-5.5M12 10c0-4 2-7 5-7.5M12 12c0-4-2-7-5-7.5"></path>
+                      </svg>
+                    )}
+                    {info.icon === "east" && (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 2v3M10 2v3M14 2v3"></path>
+                      </svg>
+                    )}
+                    {info.icon === "west" && (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M12 2L2 22h20L12 2zM12 2v20M2 22c5-3 15-3 20 0"></path>
+                      </svg>
+                    )}
+                    {info.icon === "northeast" && (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M4 22L12 5l8 17H4zM10 13l2-2.5 3 3.5"></path>
+                      </svg>
+                    )}
+                    {info.icon === "central" && (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M12 14a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm16 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm-14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path>
+                      </svg>
+                    )}
+                  </span>
+                  <div>
+                    <h3 className="font-heading text-lg font-bold uppercase tracking-wide leading-tight">{regionName}</h3>
+                    <p className="font-sans text-xs text-brand-white/80 mt-1">{info.desc}</p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

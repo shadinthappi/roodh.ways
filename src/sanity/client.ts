@@ -5,7 +5,7 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: false,
 });
 
 export async function sanityFetch<T>(query: string, params?: Record<string, unknown>): Promise<T> {

@@ -18,7 +18,7 @@ export default function VisaFaq() {
 
         {/* Left: Visa Info Block */}
         <div className="w-full lg:w-2/5 flex flex-col justify-center">
-          <p className="text-brand-rust font-sans font-bold uppercase tracking-widest text-sm mb-6">Plan Ahead</p>
+          <p className="text-brand-blue font-sans font-bold uppercase tracking-widest text-sm mb-6">Plan Ahead</p>
           <h2 className="font-heading text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-8">
             e-Visa &<br />Entry Info
           </h2>
@@ -26,10 +26,10 @@ export default function VisaFaq() {
             India's e-Visa system makes it simple to get your travel authorization online before you fly. Find everything you need to know about entry requirements, visa types, and travel documentation.
           </p>
           <div className="flex flex-col gap-4">
-            <a href="#" className="w-fit bg-brand-rust hover:bg-brand-rust/80 text-brand-white px-8 py-4 rounded-full font-heading uppercase tracking-wider font-bold transition-colors">
+            <a href="https://indianvisaonline.gov.in/" target="_blank" rel="noreferrer" className="w-fit bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-8 py-4 rounded-full font-heading uppercase tracking-wider font-bold transition-colors">
               Apply for e-Visa
             </a>
-            <a href="#" className="w-fit border-2 border-brand-white/30 hover:border-brand-sand text-brand-white px-8 py-4 rounded-full font-heading uppercase tracking-wider font-bold transition-colors">
+            <a href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noreferrer" className="w-fit border-2 border-brand-white/30 hover:border-brand-sand text-brand-white px-8 py-4 rounded-full font-heading uppercase tracking-wider font-bold transition-colors">
               Entry Requirements
             </a>
           </div>

@@ -53,11 +53,14 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
       <Header />
 
       {/* Hero */}
-      <section className={`w-full ${route.color || "bg-brand-rust"} pt-36 pb-24 px-6 relative overflow-hidden`}>
+      <section className={`w-full ${route.color || "bg-brand-blue"} pt-36 pb-24 px-6 relative overflow-hidden`}>
         <div className="absolute inset-0 opacity-10"
           style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "40px 40px" }} />
         {route.mainImage && (
-          <Image src={urlFor(route.mainImage).url()} alt={route.name} fill className="object-cover absolute inset-0 z-0 opacity-20" />
+          <>
+            <Image src={urlFor(route.mainImage).url()} alt={route.name} fill unoptimized className="object-cover absolute inset-0 z-0" />
+            <div className="absolute inset-0 bg-brand-dark/40 z-0" />
+          </>
         )}
         <div className="max-w-7xl mx-auto relative z-10">
           <p className="text-brand-white/60 font-sans font-bold uppercase tracking-widest text-sm mb-4">{route.tagline}</p>
@@ -88,16 +91,16 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
           <h2 className="font-heading text-5xl uppercase font-black tracking-tighter text-brand-white mb-12">The Route</h2>
           <div className="flex flex-col md:flex-row gap-0 relative">
             {/* Connecting line */}
-            <div className="hidden md:block absolute top-6 left-6 right-6 h-0.5 bg-brand-rust/30" />
+            <div className="hidden md:block absolute top-6 left-6 right-6 h-0.5 bg-brand-blue/30" />
             {route.stops?.map((stop: string, i: number) => (
               <div key={i} className="flex md:flex-col items-center md:items-start gap-6 md:gap-4 flex-1 relative pb-8 md:pb-0">
                 {/* Circle */}
-                <div className="shrink-0 w-12 h-12 rounded-full bg-brand-rust border-4 border-brand-dark flex items-center justify-center font-heading font-black text-brand-white text-sm z-10">
+                <div className="shrink-0 w-12 h-12 rounded-full bg-brand-blue border-4 border-brand-dark flex items-center justify-center font-heading font-black text-brand-white text-sm z-10">
                   {String(i + 1).padStart(2, "0")}
                 </div>
                 <div>
                   <h3 className="font-heading text-xl font-bold uppercase tracking-wide text-brand-white">{stop}</h3>
-                  <div className={`mt-3 w-full md:w-auto h-28 md:h-36 ${route.color || "bg-brand-rust"} rounded-xl flex items-center justify-center`}>
+                  <div className={`mt-3 w-full md:w-auto h-28 md:h-36 ${route.color || "bg-brand-blue"} rounded-xl flex items-center justify-center`}>
                     <p className="text-brand-white/20 font-heading text-xs uppercase tracking-widest">[ Photo ]</p>
                   </div>
                 </div>
@@ -114,7 +117,7 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {route.highlights?.map((h: string, i: number) => (
               <div key={i} className="bg-brand-white p-6 rounded-2xl shadow-sm border border-brand-dark/5 flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-brand-rust flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center shrink-0">
                   <span className="text-brand-white font-bold font-sans text-xs">{i + 1}</span>
                 </div>
                 <p className="font-sans font-semibold text-brand-dark">{h}</p>
@@ -131,9 +134,12 @@ export default async function RouteDetailPage({ params }: { params: Promise<{ sl
             <h2 className="font-heading text-5xl uppercase font-black tracking-tighter text-brand-dark mb-10">More Routes</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {related.map((r) => (
-                <Link key={r.slug} href={`/routes/${r.slug}`} className={`${r.color || "bg-brand-rust"} rounded-2xl p-10 flex flex-col justify-end min-h-[240px] group hover:opacity-90 transition-opacity relative overflow-hidden`}>
+                <Link key={r.slug} href={`/routes/${r.slug}`} className={`${r.color || "bg-brand-blue"} rounded-2xl p-10 flex flex-col justify-end min-h-[240px] group hover:opacity-90 transition-opacity relative overflow-hidden`}>
                   {r.mainImage && (
-                    <Image src={urlFor(r.mainImage).url()} alt={r.name} fill className="object-cover absolute inset-0 z-0 opacity-40 group-hover:opacity-50 transition-opacity" />
+                    <>
+                      <Image src={urlFor(r.mainImage).url()} alt={r.name} fill unoptimized className="object-cover absolute inset-0 z-0 transition-transform duration-500 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0" />
+                    </>
                   )}
                   <div className="relative z-10">
                     <p className="font-sans text-brand-white/60 text-xs font-bold uppercase tracking-widest mb-2">{r.tagline} · {r.duration}</p>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Oswald } from "next/font/google";
+import { League_Spartan, Oswald } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const spartan = League_Spartan({
+  variable: "--font-spartan",
   subsets: ["latin"],
 });
 
@@ -11,6 +11,8 @@ const oswald = Oswald({
   variable: "--font-oswald",
   subsets: ["latin"],
 });
+
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 export const metadata: Metadata = {
   title: "roodh.ways - India The Majestic",
@@ -25,9 +27,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${oswald.variable} h-full antialiased`}
+      className={`${spartan.variable} ${oswald.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-brand-white text-brand-dark">{children}</body>
+      <body className="min-h-full flex flex-col font-sans bg-brand-white text-brand-dark">
+        <AnalyticsTracker />
+        {children}
+      </body>
     </html>
   );
 }

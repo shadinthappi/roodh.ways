@@ -1,5 +1,6 @@
 import React from "react";
 import PlanClient from "./PlanClient";
+import Footer from "@/components/Footer";
 import { sanityFetch } from "@/sanity/client";
 import { groq } from "next-sanity";
 
@@ -23,5 +24,5 @@ export default async function PlanPage() {
   
   const itineraries = await sanityFetch<any[]>(query);
 
-  return <PlanClient itineraries={itineraries} />;
+  return <PlanClient itineraries={itineraries} footer={<Footer />} />;
 }

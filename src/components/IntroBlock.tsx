@@ -6,7 +6,7 @@ export default function IntroBlock() {
     <section className="w-full bg-brand-white py-24 px-6">
       <div className="max-w-4xl mx-auto text-center">
         <FadeIn delay={0}>
-          <p className="text-brand-rust font-sans font-bold uppercase tracking-widest text-sm mb-6">
+          <p className="text-brand-blue font-sans font-bold uppercase tracking-widest text-sm mb-6">
             Welcome to roodh.ways
           </p>
         </FadeIn>
@@ -22,10 +22,10 @@ export default function IntroBlock() {
         </FadeIn>
         <FadeIn delay={0.3}>
           <div className="flex flex-wrap gap-4 justify-center">
-            <button className="bg-brand-dark text-brand-white px-8 py-4 rounded-full font-heading uppercase tracking-wider font-bold hover:bg-brand-rust transition-colors">
+            <button className="bg-brand-dark text-brand-white px-8 py-4 rounded-full font-heading uppercase tracking-wider font-bold hover:bg-brand-blue transition-colors">
               Start Exploring
             </button>
-            <button className="border-2 border-brand-dark text-brand-dark px-8 py-4 rounded-full font-heading uppercase tracking-wider font-bold hover:border-brand-rust hover:text-brand-rust transition-colors">
+            <button className="border-2 border-brand-dark text-brand-dark px-8 py-4 rounded-full font-heading uppercase tracking-wider font-bold hover:border-brand-blue hover:text-brand-blue transition-colors">
               View All Destinations
             </button>
           </div>

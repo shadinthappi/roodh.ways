@@ -21,7 +21,7 @@ export default function ScrollShowcase() {
       {/* Scrolling Content Side */}
       <div className="w-full md:w-1/2 flex flex-col">
         {[
-          { title: "The Golden Triangle", desc: "Delhi, Agra, and Jaipur.", color: "bg-brand-rust" },
+          { title: "The Golden Triangle", desc: "Delhi, Agra, and Jaipur.", color: "bg-brand-blue" },
           { title: "Serene South", desc: "Kerala and Tamil Nadu.", color: "bg-[#2A3B4C]" },
           { title: "Himalayan High", desc: "Leh, Ladakh, and Himachal.", color: "bg-[#4B5E4A]" }
         ].map((item, index) => (

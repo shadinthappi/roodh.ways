@@ -1,0 +1,250 @@
+"use client";
+
+import React, { useState } from "react";
+import { projectId, dataset } from "@/sanity/env";
+
+const HERO_FIELDS = [
+  { key: "internationalHero", label: "International Page Hero" },
+  { key: "destinationsHero", label: "Destinations Page Hero" },
+  { key: "experiencesHero", label: "Experiences Page Hero" },
+  { key: "routesHero", label: "Routes Page Hero" },
+  { key: "storiesHero", label: "Stories Page Hero" },
+  { key: "eventsHero", label: "Events Page Hero" },
+  { key: "visaHero", label: "E-Visa Page Hero" },
+  { key: "travelTradeHero", label: "Travel Trade Page Hero" },
+];
+
+export default function SettingsForm({ initialData }: { initialData: any }) {
+  const [formData, setFormData] = useState<any>(initialData || { _id: "siteSettings", _type: "siteSettings" });
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleImageUpload = async (file: File, fieldKey: string) => {
+    const uploadFormData = new FormData();
+    uploadFormData.append("file", file);
+
+    setFormData((prev: any) => ({ ...prev, [fieldKey]: "Uploading..." }));
+
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: uploadFormData,
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setFormData((prev: any) => ({ ...prev, [fieldKey]: data.sanityRef }));
+      } else {
+        alert(`Upload failed: ${data.message || data.error}`);
+        setFormData((prev: any) => {
+          const next = { ...prev };
+          delete next[fieldKey];
+          return next;
+        });
+      }
+    } catch (err) {
+      alert("Error uploading file.");
+    }
+  };
+
+  const getImageUrl = (imgRef: any) => {
+    if (!imgRef || !imgRef.asset || !imgRef.asset._ref) return null;
+    const ref = imgRef.asset._ref;
+    return `https://cdn.sanity.io/images/${projectId}/${dataset}/${ref.replace("image-", "").replace("-jpg", ".jpg").replace("-png", ".png").replace("-webp", ".webp")}`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+
+    try {
+      const setFields: any = {};
+      const fields = [
+        "internationalHero",
+        "destinationsHero",
+        "experiencesHero",
+        "routesHero",
+        "storiesHero",
+        "eventsHero",
+        "visaHero",
+        "travelTradeHero",
+        "contactEmail",
+        "instagramUrl",
+        "facebookUrl",
+        "twitterUrl",
+        "youtubeUrl",
+        "whatsappUrl",
+      ];
+      fields.forEach((field) => {
+        if (formData[field] !== undefined) {
+          setFields[field] = formData[field];
+        }
+      });
+
+      const payload = {
+        mutations: [
+          {
+            createIfNotExists: {
+              _id: "siteSettings",
+              _type: "siteSettings",
+            },
+          },
+          {
+            patch: {
+              id: "siteSettings",
+              set: setFields,
+            },
+          },
+        ],
+      };
+
+      const res = await fetch("/api/admin/mutate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        alert("Settings saved successfully!");
+      } else {
+        alert(`Failed to save: ${data.message || data.error || "Unknown database error"}`);
+      }
+    } catch (err) {
+      alert("Error saving settings.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="p-8">
+      <div className="mb-8">
+        <h2 className="text-sm font-black text-brand-dark uppercase tracking-widest mb-2">Page Hero Backgrounds</h2>
+        <p className="text-xs text-brand-dark/60 font-medium">Upload cinematic, high-quality images to be used as backgrounds for the main section headers on these pages (Recommended: 1920x1080px for 16:9 or 2560x1080px for 21:9 landscape).</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        {HERO_FIELDS.map((field) => {
+          const isUploading = formData[field.key] === "Uploading...";
+          const imgUrl = typeof formData[field.key] === "string" ? formData[field.key] : getImageUrl(formData[field.key]);
+
+          return (
+            <div key={field.key} className="flex flex-col gap-3">
+              <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">{field.label}</label>
+              
+              <div className="relative w-full h-40 rounded-xl bg-brand-offwhite border border-brand-dark/10 overflow-hidden group flex flex-col items-center justify-center text-center p-4">
+                {imgUrl && imgUrl !== "Uploading..." ? (
+                  <img src={imgUrl} alt={field.label} className="absolute inset-0 w-full h-full object-cover" />
+                ) : (
+                  <svg className="w-8 h-8 text-brand-dark/30 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                )}
+                
+                {isUploading && (
+                  <div className="absolute inset-0 bg-brand-dark/50 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full border-2 border-brand-white/20 border-t-brand-white animate-spin" />
+                  </div>
+                )}
+
+                <div className="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <label className="px-4 py-2 bg-brand-white text-brand-dark text-xs font-bold rounded-full cursor-pointer hover:scale-105 transition-transform shadow-lg">
+                    Upload Image
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files?.[0]) handleImageUpload(e.target.files[0], field.key);
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mb-8 pt-8 border-t border-brand-dark/10">
+        <h2 className="text-sm font-black text-brand-dark uppercase tracking-widest mb-2">Contact & Social Media</h2>
+        <p className="text-xs text-brand-dark/60 font-medium mb-6">These details will be displayed in the site footer and contact sections.</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">Contact Email</label>
+            <input 
+              type="email" 
+              value={formData.contactEmail || ""}
+              onChange={(e) => setFormData({...formData, contactEmail: e.target.value})}
+              placeholder="e.g. hello@roodh.ways.com"
+              className="w-full px-4 py-3 rounded-xl border border-brand-dark/15 bg-brand-offwhite/50 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-blue"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">Instagram URL</label>
+            <input 
+              type="url" 
+              value={formData.instagramUrl || ""}
+              onChange={(e) => setFormData({...formData, instagramUrl: e.target.value})}
+              placeholder="https://instagram.com/..."
+              className="w-full px-4 py-3 rounded-xl border border-brand-dark/15 bg-brand-offwhite/50 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-blue"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">Facebook URL</label>
+            <input 
+              type="url" 
+              value={formData.facebookUrl || ""}
+              onChange={(e) => setFormData({...formData, facebookUrl: e.target.value})}
+              placeholder="https://facebook.com/..."
+              className="w-full px-4 py-3 rounded-xl border border-brand-dark/15 bg-brand-offwhite/50 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-blue"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">Twitter / X URL</label>
+            <input 
+              type="url" 
+              value={formData.twitterUrl || ""}
+              onChange={(e) => setFormData({...formData, twitterUrl: e.target.value})}
+              placeholder="https://twitter.com/..."
+              className="w-full px-4 py-3 rounded-xl border border-brand-dark/15 bg-brand-offwhite/50 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-blue"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">YouTube URL</label>
+            <input 
+              type="url" 
+              value={formData.youtubeUrl || ""}
+              onChange={(e) => setFormData({...formData, youtubeUrl: e.target.value})}
+              placeholder="https://youtube.com/..."
+              className="w-full px-4 py-3 rounded-xl border border-brand-dark/15 bg-brand-offwhite/50 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-blue"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">WhatsApp URL / Number</label>
+            <input 
+              type="text" 
+              value={formData.whatsappUrl || ""}
+              onChange={(e) => setFormData({...formData, whatsappUrl: e.target.value})}
+              placeholder="https://wa.me/1234567890"
+              className="w-full px-4 py-3 rounded-xl border border-brand-dark/15 bg-brand-offwhite/50 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-blue"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-8 border-t border-brand-dark/10 flex justify-end">
+        <button
+          type="submit"
+          disabled={isSaving}
+          className="px-8 py-3 rounded-xl font-bold text-white bg-brand-blue hover:bg-brand-blue/90 shadow-sm disabled:opacity-50 transition-all"
+        >
+          {isSaving ? "Saving..." : "Save Settings"}
+        </button>
+      </div>
+    </form>
+  );
+}
