@@ -43,8 +43,8 @@ export default async function Home() {
       <ArticleCarousel stories={stories} />
       <TestimonialsSection />
       <VisaFaq />
-      <DestinationStrips />
       <SocialFeed instagramUrl={settings?.instagramUrl} />
+      <DestinationStrips />
 
       <Footer />
     </main>
