@@ -53,7 +53,8 @@ export default function SocialFeed({ instagramUrl }: { instagramUrl?: string }) 
         </div>
 
         {/* Grid */}
-        <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3" staggerDelay={0.07}>
+        <div className="max-w-4xl mx-auto">
+          <StaggerContainer className="grid grid-cols-3 gap-1 md:gap-6" staggerDelay={0.07}>
           {displayPosts.map((post, i) => {
             const isSkeleton = post.isSkeleton;
             const imageUrl = !isSkeleton ? (post.sizes?.large?.mediaUrl || post.mediaUrl) : null;
@@ -93,7 +94,8 @@ export default function SocialFeed({ instagramUrl }: { instagramUrl?: string }) 
               </StaggerItem>
             );
           })}
-        </StaggerContainer>
+          </StaggerContainer>
+        </div>
       </div>
     </section>
   );
