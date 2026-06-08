@@ -12,7 +12,6 @@ import SocialFeed from "@/components/SocialFeed";
 import Footer from "@/components/Footer";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
-import { getInstagramPosts } from "@/lib/instagram";
 
 export default async function Home() {
   const featuredQuery = groq`*[_type == "destination" && isFeatured == true] | order(_createdAt desc) {
@@ -28,11 +27,10 @@ export default async function Home() {
     title, "slug": slug.current, category, excerpt, coverImage, themeColor, readTime
   }`;
 
-  const [featuredDestinations, settings, stories, instagramPosts] = await Promise.all([
+  const [featuredDestinations, settings, stories] = await Promise.all([
     sanityFetch<any[]>(featuredQuery).catch(() => []),
     sanityFetch<any>(SITE_SETTINGS_QUERY).catch(() => null),
-    sanityFetch<any[]>(storiesQuery).catch(() => []),
-    getInstagramPosts()
+    sanityFetch<any[]>(storiesQuery).catch(() => [])
   ]);
 
   return (
@@ -45,7 +43,7 @@ export default async function Home() {
       <DestinationStrips />
       <TestimonialsSection />
       <VisaFaq />
-      <SocialFeed instagramUrl={settings?.instagramUrl} posts={instagramPosts} />
+      <SocialFeed instagramUrl={settings?.instagramUrl} />
       <ArticleCarousel stories={stories} />
 
       <Footer />

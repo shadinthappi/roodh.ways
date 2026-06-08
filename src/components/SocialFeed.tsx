@@ -1,25 +1,33 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import { StaggerContainer, StaggerItem } from "@/components/Stagger";
 
-import Image from "next/image";
-import { type InstagramPost } from "@/lib/instagram";
+export default function SocialFeed({ instagramUrl }: { instagramUrl?: string }) {
+  const [feed, setFeed] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const defaultPosts = [
-  { tag: "Rajasthan", color: "bg-[#C0392B]" },
-  { tag: "Kerala", color: "bg-[#16A085]" },
-  { tag: "Ladakh", color: "bg-[#3B2F4A]" },
-  { tag: "Goa", color: "bg-[#1A3A4A]" },
-  { tag: "Varanasi", color: "bg-[#3D2B1F]" },
-  { tag: "Mumbai", color: "bg-[#2C3E50]" },
-];
+  useEffect(() => {
+    const fetchFeed = async () => {
+      try {
+        const res = await fetch("https://feeds.behold.so/MKhMVFueh4ZDhCn5PWBG");
+        const data = await res.json();
+        if (data && data.posts) {
+          setFeed(data.posts.slice(0, 6));
+        }
+      } catch (error) {
+        console.error("Failed to fetch Instagram feed", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFeed();
+  }, []);
 
-export default function SocialFeed({ instagramUrl, posts = [] }: { instagramUrl?: string, posts?: InstagramPost[] }) {
-  const hasLivePosts = posts && posts.length > 0;
-  // Pad with default blocks if we don't have exactly 6 posts
-  const displayCount = 6;
+  const displayPosts = loading || feed.length === 0 
+    ? Array(6).fill({ isSkeleton: true }) 
+    : feed;
 
   return (
     <section className="w-full bg-brand-dark py-24 px-6">
@@ -37,7 +45,7 @@ export default function SocialFeed({ instagramUrl, posts = [] }: { instagramUrl?
             </FadeIn>
           </div>
           <FadeIn delay={0.2} direction="left">
-            <a href={instagramUrl || "https://instagram.com"} target="_blank" rel="noopener noreferrer"
+            <a href={instagramUrl || "https://instagram.com/roodh.ways"} target="_blank" rel="noopener noreferrer"
               className="border-2 border-brand-white text-brand-white px-8 py-3 rounded-full font-heading uppercase tracking-wider font-bold hover:bg-brand-white hover:text-brand-dark transition-colors">
               Follow on Instagram
             </a>
@@ -45,53 +53,46 @@ export default function SocialFeed({ instagramUrl, posts = [] }: { instagramUrl?
         </div>
 
         {/* Grid */}
-        <StaggerContainer className="grid grid-cols-3 md:grid-cols-6 gap-3" staggerDelay={0.07}>
-          {hasLivePosts ? (
-            posts.slice(0, displayCount).map((post) => (
-              <StaggerItem key={post.id}>
-                <a
-                  href={post.permalink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block aspect-square rounded-xl overflow-hidden group cursor-pointer relative shadow-md bg-brand-dark/50"
-                >
-                  <Image 
-                    src={post.media_type === "VIDEO" ? (post.thumbnail_url || post.media_url) : post.media_url} 
-                    alt={post.caption?.slice(0, 50) || "Instagram post"} 
-                    fill 
-                    unoptimized
-                    className="object-cover transition-transform duration-500 group-hover:scale-105" 
-                  />
-                  <div className="absolute inset-0 bg-brand-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <svg className="w-8 h-8 text-brand-white drop-shadow-md" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                      <circle cx="12" cy="13" r="4"></circle>
-                    </svg>
-                  </div>
-                </a>
-              </StaggerItem>
-            ))
-          ) : (
-            defaultPosts.map((post, i) => (
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3" staggerDelay={0.07}>
+          {displayPosts.map((post, i) => {
+            const isSkeleton = post.isSkeleton;
+            const imageUrl = !isSkeleton ? (post.sizes?.large?.mediaUrl || post.mediaUrl) : null;
+            const linkUrl = !isSkeleton ? post.permalink : "#";
+            const bgColor = !isSkeleton && post.colorPalette?.dominant ? `rgb(${post.colorPalette.dominant})` : "#1a1a1a";
+
+            return (
               <StaggerItem key={i}>
-                <motion.div
-                  className={`${post.color} aspect-square rounded-xl overflow-hidden group cursor-pointer relative shadow-md`}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-brand-white/20 font-heading text-xs uppercase tracking-widest text-center px-2">{post.tag}</p>
-                  </div>
-                  <div className="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <svg className="w-8 h-8 text-brand-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                      <circle cx="12" cy="13" r="4"></circle>
-                    </svg>
-                  </div>
-                </motion.div>
+                {isSkeleton ? (
+                  <div className="aspect-square rounded-xl bg-brand-white/5 animate-pulse" />
+                ) : (
+                  <motion.a
+                    href={linkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block aspect-square rounded-xl overflow-hidden group cursor-pointer relative shadow-md"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ backgroundColor: bgColor }}
+                  >
+                    {imageUrl && (
+                      <img 
+                        src={imageUrl} 
+                        alt={post.prunedCaption || "Instagram post"} 
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <svg className="w-8 h-8 text-brand-white drop-shadow-md" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                      </svg>
+                    </div>
+                  </motion.a>
+                )}
               </StaggerItem>
-            ))
-          )}
+            );
+          })}
         </StaggerContainer>
       </div>
     </section>
