@@ -185,7 +185,7 @@ export default function ChatWidget() {
                         </div>
                         <input name="destination" required placeholder="Where do you want to go?" className="w-full text-xs font-sans px-3 py-2 bg-brand-offwhite border border-brand-dark/10 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-blue" />
                         <div className="flex gap-2">
-                          <input name="date" type="text" required placeholder="When? (e.g. Next month)" className="w-full text-xs font-sans px-3 py-2 bg-brand-offwhite border border-brand-dark/10 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-blue" />
+                          <input name="date" type="date" required className="w-full text-xs font-sans px-3 py-2 bg-brand-offwhite border border-brand-dark/10 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-blue" />
                           <input name="travelers" type="number" min="1" placeholder="Guests" className="w-20 text-xs font-sans px-3 py-2 bg-brand-offwhite border border-brand-dark/10 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-blue" />
                         </div>
                         <button type="submit" className="w-full mt-1 bg-brand-blue text-white text-xs font-bold uppercase tracking-wider py-2 rounded-lg hover:bg-brand-dark transition-colors disabled:opacity-50">Submit Details</button>
