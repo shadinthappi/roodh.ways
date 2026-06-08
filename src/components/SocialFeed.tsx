@@ -15,6 +15,10 @@ const posts = [
   { tag: "Goa", color: "bg-[#1A3A4A]" },
   { tag: "Varanasi", color: "bg-[#3D2B1F]" },
   { tag: "Mumbai", color: "bg-[#2C3E50]" },
+  { tag: "Hampi", color: "bg-[#D35400]" },
+  { tag: "Andaman", color: "bg-[#2980B9]" },
+  { tag: "Meghalaya", color: "bg-[#27AE60]" },
+  { tag: "Rishikesh", color: "bg-[#8E44AD]" },
 ];
 
 interface FeedImage {
@@ -27,11 +31,27 @@ export default function SocialFeed({ instagramUrl, feedImages }: { instagramUrl?
   const displayPosts = feedImages && feedImages.length > 0 ? feedImages : posts;
 
   const getBentoClass = (index: number) => {
-    const i = index % 6;
-    if (i === 0) return "md:col-span-2 md:row-span-2 min-h-[300px] md:min-h-0"; // Large square
-    if (i >= 1 && i <= 4) return "md:col-span-1 md:row-span-1 min-h-[150px] md:min-h-0"; // Small squares
-    if (i === 5) return "md:col-span-4 md:row-span-1 min-h-[200px] md:min-h-[250px]"; // Wide rectangle
-    return "md:col-span-1 md:row-span-1";
+    const i = index % 10;
+    // 0: Large Square
+    if (i === 0) return "col-span-2 md:col-span-2 row-span-2"; 
+    // 1: Small square
+    if (i === 1) return "col-span-1 md:col-span-1 row-span-1";
+    // 2: Tall rectangle
+    if (i === 2) return "col-span-1 md:col-span-1 row-span-2"; 
+    // 3: Small square
+    if (i === 3) return "col-span-1 md:col-span-1 row-span-1";
+    // 4: Wide rectangle
+    if (i === 4) return "col-span-2 md:col-span-2 row-span-1"; 
+    // 5 & 6: Small squares
+    if (i === 5 || i === 6) return "col-span-1 md:col-span-1 row-span-1";
+    // 7: Tall rectangle
+    if (i === 7) return "col-span-1 md:col-span-1 row-span-2"; 
+    // 8: Large Square
+    if (i === 8) return "col-span-2 md:col-span-2 row-span-2"; 
+    // 9: Tall rectangle
+    if (i === 9) return "col-span-1 md:col-span-1 row-span-2"; 
+    
+    return "col-span-1 md:col-span-1 row-span-1";
   };
 
   return (
@@ -58,11 +78,11 @@ export default function SocialFeed({ instagramUrl, feedImages }: { instagramUrl?
         </div>
 
         {/* Bento Grid */}
-        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-fr" staggerDelay={0.07}>
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[180px] md:auto-rows-[250px] grid-flow-dense" staggerDelay={0.07}>
           {displayPosts.map((post, i) => (
             <StaggerItem key={i} className={getBentoClass(i)}>
               <motion.div
-                className={`${post.color || "bg-brand-blue"} w-full h-full rounded-2xl overflow-hidden group cursor-pointer relative shadow-lg`}
+                className={`${post.color || "bg-brand-blue"} w-full h-full rounded-3xl overflow-hidden group cursor-pointer relative shadow-lg`}
                 whileHover={{ scale: 0.98 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
               >
