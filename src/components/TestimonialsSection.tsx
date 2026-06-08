@@ -1,6 +1,5 @@
 import React from "react";
 import FadeIn from "./FadeIn";
-import FadeIn from "./FadeIn";
 
 const DEFAULT_TESTIMONIALS = [
   {
