@@ -22,20 +22,20 @@ export async function GET() {
       useCdn: false,
     });
 
-    const query = `*[_type == "vendor" && isTrashed != true] | order(name asc) {
+    const query = `*[(_type == "booking" || _type == "vendor") && isTrashed == true] | order(trashedAt desc) {
       _id,
+      _type,
+      customerName,
       name,
-      category,
-      contactPerson,
       email,
       phone,
-      contractRates,
-      notes
+      status,
+      trashedAt
     }`;
 
     const data = await authenticatedClient.fetch(query);
     return NextResponse.json(data);
   } catch (error: any) {
-    return NextResponse.json({ error: "Failed to load vendors", details: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Failed to load trash", details: error.message }, { status: 500 });
   }
 }

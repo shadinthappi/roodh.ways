@@ -101,17 +101,17 @@ export default function FinanceManager({ leads }: { leads: any[] }) {
   };
 
   const handleDeleteLedger = async (id: string) => {
-    if (!window.confirm("Are you sure you want to permanently delete this ledger record? This action cannot be undone.")) return;
+    if (!window.confirm("Are you sure you want to move this ledger to the Trash Folder?")) return;
 
     try {
       await fetch("/api/admin/mutate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mutations: [{ delete: { id } }] })
+        body: JSON.stringify({ mutations: [{ patch: { id, set: { isTrashed: true, trashedAt: new Date().toISOString() } } }] })
       });
       setActiveLeads(activeLeads.filter(l => l._id !== id));
     } catch (e) {
-      alert("Failed to delete ledger");
+      alert("Failed to move ledger to trash");
     }
   };
 

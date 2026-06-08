@@ -70,6 +70,10 @@ export const bookingType = defineType({
     defineField({ name: "invoiceNumber", title: "Invoice Number", type: "string" }),
     defineField({ name: "notes", title: "Special Requests / Traveler Notes", type: "text", rows: 3 }),
     defineField({ name: "agentNotes", title: "Internal Agent Notes (Not visible to traveler)", type: "text", rows: 4 }),
+    
+    // Trash Flags
+    defineField({ name: "isTrashed", title: "Is Trashed?", type: "boolean", initialValue: false }),
+    defineField({ name: "trashedAt", title: "Trashed At", type: "datetime" }),
   ],
   preview: {
     select: { title: "customerName", subtitle: "status", date: "travelDate" },

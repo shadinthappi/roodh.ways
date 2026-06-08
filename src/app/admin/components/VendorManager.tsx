@@ -58,10 +58,10 @@ export default function VendorManager() {
       await fetch("/api/admin/mutate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mutations: [{ delete: { id } }] })
+        body: JSON.stringify({ mutations: [{ patch: { id, set: { isTrashed: true, trashedAt: new Date().toISOString() } } }] })
       });
     } catch (e) {
-      alert("Failed to delete vendor");
+      alert("Failed to move vendor to trash");
       fetchVendors(); // revert
     }
   };

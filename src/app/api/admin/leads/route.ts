@@ -22,7 +22,7 @@ export async function GET() {
       useCdn: false,
     });
 
-    const query = `*[_type == "booking"] | order(_createdAt desc) {
+    const query = `*[_type == "booking" && isTrashed != true] | order(_createdAt desc) {
       _id,
       customerName,
       email,
@@ -32,6 +32,12 @@ export async function GET() {
       travelers,
       status,
       totalPrice,
+      advancePaid,
+      vendorCosts,
+      costItems,
+      markupPercentage,
+      taxPercentage,
+      paymentLog,
       notes,
       agentNotes,
       _createdAt

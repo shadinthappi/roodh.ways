@@ -8,6 +8,7 @@ import TaskManager from "./components/TaskManager";
 import ExcelExportButton from "./components/ExcelExportButton";
 import VendorManager from "./components/VendorManager";
 import FinanceManager from "./components/FinanceManager";
+import TrashManager from "./components/TrashManager";
 
 interface RecentDoc {
   _id: string;
@@ -19,7 +20,7 @@ interface RecentDoc {
 }
 
 export default function AdminOverview() {
-  const [activeTab, setActiveTab] = useState<"pipeline" | "finance" | "vendors">("pipeline");
+  const [activeTab, setActiveTab] = useState<"pipeline" | "finance" | "vendors" | "trash">("pipeline");
   const [recentDocs, setRecentDocs] = useState<RecentDoc[]>([]);
   const [leads, setLeads] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
@@ -117,6 +118,13 @@ export default function AdminOverview() {
         >
           Operations & Vendors
           {activeTab === "vendors" && <div className="absolute bottom-0 left-0 w-full h-1 bg-brand-blue rounded-t" />}
+        </button>
+        <button 
+          onClick={() => setActiveTab("trash")}
+          className={`pb-4 text-sm font-bold uppercase tracking-widest transition-colors relative ${activeTab === "trash" ? "text-red-500" : "text-brand-dark/50 hover:text-red-500"}`}
+        >
+          Trash (30 Days)
+          {activeTab === "trash" && <div className="absolute bottom-0 left-0 w-full h-1 bg-red-500 rounded-t" />}
         </button>
       </div>
 
@@ -281,6 +289,12 @@ export default function AdminOverview() {
       {activeTab === "vendors" && (
         <div className="animate-[fadeIn_0.3s_ease-out]">
           <VendorManager />
+        </div>
+      )}
+
+      {activeTab === "trash" && (
+        <div className="animate-[fadeIn_0.3s_ease-out]">
+          <TrashManager />
         </div>
       )}
 

@@ -30,22 +30,13 @@ export const vendorType = defineType({
       title: "Email Address",
       type: "string",
     }),
-    defineField({
-      name: "phone",
-      title: "Phone Number",
-      type: "string",
-    }),
-    defineField({
-      name: "contractRates",
-      title: "Contracted Rates / Tariff link",
-      type: "string",
-    }),
-    defineField({
-      name: "notes",
-      title: "Internal Notes",
-      type: "text",
-      rows: 3,
-    }),
+    defineField({ name: "phone", title: "Phone Number", type: "string" }),
+    defineField({ name: "contractRates", title: "Contract Rates Link (Drive/Dropbox)", type: "url" }),
+    defineField({ name: "notes", title: "Internal Notes", type: "text", rows: 4 }),
+    
+    // Trash Flags
+    defineField({ name: "isTrashed", title: "Is Trashed?", type: "boolean", initialValue: false }),
+    defineField({ name: "trashedAt", title: "Trashed At", type: "datetime" }),
   ],
   preview: {
     select: {
