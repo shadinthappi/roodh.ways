@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       travelers: Number(travelers),
       totalPrice: Number(totalPrice) || 0,
       notes: notes || "",
-      status: "Pending",
+      status: "New Lead",
     };
 
     const result = await writeClient.create(newBooking);
