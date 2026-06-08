@@ -10,6 +10,8 @@ export const siteSettingsType = defineType({
     { name: 'heroes', title: 'Page Hero Images' },
     { name: 'chatbot', title: 'Chatbot Settings' },
     { name: 'socialFeed', title: 'Social Feed' },
+    { name: 'testimonials', title: 'Testimonials' },
+    { name: 'exploreWays', title: 'Explore Your Way' },
   ],
   fields: [
     defineField({
@@ -135,6 +137,51 @@ export const siteSettingsType = defineType({
               media: 'image'
             }
           }
+        }
+      ]
+    }),
+    defineField({
+      name: 'testimonials',
+      title: 'Testimonials',
+      type: 'array',
+      group: 'testimonials',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'name', type: 'string', title: 'Name' },
+            { name: 'location', type: 'string', title: 'Location' },
+            { name: 'text', type: 'text', title: 'Testimonial Text' },
+            { name: 'rating', type: 'number', title: 'Rating (1-5)', initialValue: 5 }
+          ]
+        }
+      ]
+    }),
+    defineField({
+      name: 'exploreWaysTitle',
+      title: 'Explore Ways Title',
+      type: 'string',
+      group: 'exploreWays',
+    }),
+    defineField({
+      name: 'exploreWaysSubtitle',
+      title: 'Explore Ways Subtitle',
+      type: 'text',
+      group: 'exploreWays'
+    }),
+    defineField({
+      name: 'exploreWaysItems',
+      title: 'Explore Ways Items',
+      type: 'array',
+      group: 'exploreWays',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'title', type: 'string', title: 'Title' },
+            { name: 'desc', type: 'string', title: 'Description' },
+            { name: 'color', type: 'string', title: 'Background Color Class (e.g. bg-[#4B5E4A])' }
+          ]
         }
       ]
     }),

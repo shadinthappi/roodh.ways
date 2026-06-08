@@ -109,6 +109,10 @@ export default function SettingsForm({ initialData }: { initialData: any }) {
         "youtubeUrl",
         "whatsappUrl",
         "socialFeedImages",
+        "testimonials",
+        "exploreWaysTitle",
+        "exploreWaysSubtitle",
+        "exploreWaysItems",
       ];
       fields.forEach((field) => {
         if (formData[field] !== undefined) {
@@ -324,6 +328,194 @@ export default function SettingsForm({ initialData }: { initialData: any }) {
             <div className="p-8 text-center border border-dashed border-brand-dark/20 rounded-xl text-brand-dark/40 font-medium text-sm">
               No images added yet. Click "+ Add Image" to start building your grid.
             </div>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-8 pt-8 border-t border-brand-dark/10">
+        <h2 className="text-sm font-black text-brand-dark uppercase tracking-widest mb-2">Explore Your Way</h2>
+        <p className="text-xs text-brand-dark/60 font-medium mb-6">Manage the scrolling destination showcase section on the homepage.</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">Section Title</label>
+            <input 
+              type="text" 
+              value={formData.exploreWaysTitle || ""}
+              onChange={(e) => setFormData({...formData, exploreWaysTitle: e.target.value})}
+              placeholder="e.g. Explore\nYour Way"
+              className="w-full px-4 py-3 rounded-xl border border-brand-dark/15 bg-brand-offwhite/50 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-blue"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">Section Subtitle</label>
+            <textarea 
+              value={formData.exploreWaysSubtitle || ""}
+              onChange={(e) => setFormData({...formData, exploreWaysSubtitle: e.target.value})}
+              placeholder="e.g. From the soaring peaks..."
+              className="w-full px-4 py-3 rounded-xl border border-brand-dark/15 bg-brand-offwhite/50 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-blue resize-none h-[46px]"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center mb-6">
+          <label className="text-xs font-bold text-brand-dark uppercase tracking-wide">Showcase Items</label>
+          <button 
+            type="button" 
+            onClick={() => {
+              setFormData((prev: any) => ({
+                ...prev,
+                exploreWaysItems: [...(prev.exploreWaysItems || []), { _key: Date.now().toString(), title: "", desc: "", color: "bg-brand-blue" }]
+              }));
+            }}
+            className="px-4 py-2 bg-brand-dark text-brand-white text-xs font-bold rounded-lg uppercase tracking-wider hover:bg-brand-blue transition-colors"
+          >
+            + Add Item
+          </button>
+        </div>
+
+        <div className="space-y-4 mb-12">
+          {(formData.exploreWaysItems || []).map((item: any, idx: number) => (
+            <div key={item._key || idx} className="flex gap-4 p-4 border border-brand-dark/10 rounded-xl bg-brand-white/50 relative">
+              <button 
+                type="button" 
+                onClick={() => {
+                  if(confirm("Remove this item?")) {
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      exploreWaysItems: prev.exploreWaysItems.filter((_: any, i: number) => i !== idx)
+                    }));
+                  }
+                }}
+                className="absolute top-4 right-4 text-brand-dark/30 hover:text-red-500 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+              
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 pr-8">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-brand-dark uppercase tracking-wide">Title</label>
+                  <input type="text" value={item.title || ""} onChange={(e) => {
+                      setFormData((prev: any) => {
+                        const items = [...prev.exploreWaysItems];
+                        items[idx] = { ...items[idx], title: e.target.value };
+                        return { ...prev, exploreWaysItems: items };
+                      });
+                    }} className="w-full px-3 py-2 rounded-lg border border-brand-dark/15 bg-white text-xs" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-brand-dark uppercase tracking-wide">Description</label>
+                  <input type="text" value={item.desc || ""} onChange={(e) => {
+                      setFormData((prev: any) => {
+                        const items = [...prev.exploreWaysItems];
+                        items[idx] = { ...items[idx], desc: e.target.value };
+                        return { ...prev, exploreWaysItems: items };
+                      });
+                    }} className="w-full px-3 py-2 rounded-lg border border-brand-dark/15 bg-white text-xs" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-brand-dark uppercase tracking-wide">Color Class</label>
+                  <input type="text" value={item.color || ""} onChange={(e) => {
+                      setFormData((prev: any) => {
+                        const items = [...prev.exploreWaysItems];
+                        items[idx] = { ...items[idx], color: e.target.value };
+                        return { ...prev, exploreWaysItems: items };
+                      });
+                    }} className="w-full px-3 py-2 rounded-lg border border-brand-dark/15 bg-white text-xs" />
+                </div>
+              </div>
+            </div>
+          ))}
+          {(!formData.exploreWaysItems || formData.exploreWaysItems.length === 0) && (
+            <div className="p-4 text-center border border-dashed border-brand-dark/20 rounded-xl text-brand-dark/40 font-medium text-xs">No items added.</div>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-8 pt-8 border-t border-brand-dark/10">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h2 className="text-sm font-black text-brand-dark uppercase tracking-widest mb-2">Testimonials</h2>
+            <p className="text-xs text-brand-dark/60 font-medium">Manage the traveler reviews shown on the homepage.</p>
+          </div>
+          <button 
+            type="button" 
+            onClick={() => {
+              setFormData((prev: any) => ({
+                ...prev,
+                testimonials: [...(prev.testimonials || []), { _key: Date.now().toString(), name: "", location: "", text: "", rating: 5 }]
+              }));
+            }}
+            className="px-4 py-2 bg-brand-dark text-brand-white text-xs font-bold rounded-lg uppercase tracking-wider hover:bg-brand-blue transition-colors"
+          >
+            + Add Testimonial
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {(formData.testimonials || []).map((item: any, idx: number) => (
+            <div key={item._key || idx} className="flex flex-col gap-4 p-6 border border-brand-dark/10 rounded-xl bg-brand-white/50 relative">
+              <button 
+                type="button" 
+                onClick={() => {
+                  if(confirm("Remove this testimonial?")) {
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      testimonials: prev.testimonials.filter((_: any, i: number) => i !== idx)
+                    }));
+                  }
+                }}
+                className="absolute top-4 right-4 text-brand-dark/30 hover:text-red-500 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pr-8">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-brand-dark uppercase tracking-wide">Guest Name</label>
+                  <input type="text" value={item.name || ""} onChange={(e) => {
+                      setFormData((prev: any) => {
+                        const t = [...prev.testimonials];
+                        t[idx] = { ...t[idx], name: e.target.value };
+                        return { ...prev, testimonials: t };
+                      });
+                    }} className="w-full px-3 py-2 rounded-lg border border-brand-dark/15 bg-white text-xs" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-brand-dark uppercase tracking-wide">Location</label>
+                  <input type="text" value={item.location || ""} onChange={(e) => {
+                      setFormData((prev: any) => {
+                        const t = [...prev.testimonials];
+                        t[idx] = { ...t[idx], location: e.target.value };
+                        return { ...prev, testimonials: t };
+                      });
+                    }} className="w-full px-3 py-2 rounded-lg border border-brand-dark/15 bg-white text-xs" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-brand-dark uppercase tracking-wide">Rating (1-5)</label>
+                  <input type="number" min="1" max="5" value={item.rating || 5} onChange={(e) => {
+                      setFormData((prev: any) => {
+                        const t = [...prev.testimonials];
+                        t[idx] = { ...t[idx], rating: Number(e.target.value) };
+                        return { ...prev, testimonials: t };
+                      });
+                    }} className="w-full px-3 py-2 rounded-lg border border-brand-dark/15 bg-white text-xs" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1 pr-8">
+                <label className="text-[10px] font-bold text-brand-dark uppercase tracking-wide">Review Text</label>
+                <textarea value={item.text || ""} onChange={(e) => {
+                    setFormData((prev: any) => {
+                      const t = [...prev.testimonials];
+                      t[idx] = { ...t[idx], text: e.target.value };
+                      return { ...prev, testimonials: t };
+                    });
+                  }} className="w-full px-3 py-2 rounded-lg border border-brand-dark/15 bg-white text-xs h-20 resize-none" />
+              </div>
+            </div>
+          ))}
+          {(!formData.testimonials || formData.testimonials.length === 0) && (
+            <div className="p-4 text-center border border-dashed border-brand-dark/20 rounded-xl text-brand-dark/40 font-medium text-xs">No testimonials added.</div>
           )}
         </div>
       </div>

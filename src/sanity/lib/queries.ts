@@ -14,5 +14,9 @@ export const SITE_SETTINGS_QUERY = groq`*[_type == "siteSettings"][0] {
   twitterUrl,
   youtubeUrl,
   whatsappUrl,
-  socialFeedImages
+  socialFeedImages,
+  testimonials,
+  exploreWaysTitle,
+  exploreWaysSubtitle,
+  exploreWaysItems
 }`;

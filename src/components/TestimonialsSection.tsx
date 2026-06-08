@@ -1,7 +1,8 @@
 import React from "react";
 import FadeIn from "./FadeIn";
+import FadeIn from "./FadeIn";
 
-const testimonials = [
+const DEFAULT_TESTIMONIALS = [
   {
     name: "Eleanor Rigby",
     location: "London, UK",
@@ -22,7 +23,9 @@ const testimonials = [
   }
 ];
 
-export default function TestimonialsSection() {
+export default function TestimonialsSection({ testimonials }: { testimonials?: any[] }) {
+  const displayTestimonials = testimonials && testimonials.length > 0 ? testimonials : DEFAULT_TESTIMONIALS;
+
   return (
     <section className="w-full bg-brand-sand/10 py-24 px-6 border-y border-brand-sand/20">
       <div className="max-w-7xl mx-auto">
@@ -36,7 +39,7 @@ export default function TestimonialsSection() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((t, i) => (
+          {displayTestimonials.map((t, i) => (
             <FadeIn key={i} delay={i * 0.1} direction="up">
               <div className="bg-brand-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow h-full flex flex-col relative overflow-hidden group">
                 <div className="absolute top-4 right-6 text-brand-blue/5 font-heading text-8xl leading-none group-hover:text-brand-blue/10 transition-colors">"</div>

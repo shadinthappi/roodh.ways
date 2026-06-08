@@ -39,9 +39,13 @@ export default async function Home() {
       <Hero featuredDestinations={featuredDestinations} />
       <IntroBlock />
       <RegionMap />
-      <ScrollShowcase />
+      <ScrollShowcase 
+        title={settings?.exploreWaysTitle}
+        subtitle={settings?.exploreWaysSubtitle}
+        items={settings?.exploreWaysItems}
+      />
       <DestinationStrips />
-      <TestimonialsSection />
+      <TestimonialsSection testimonials={settings?.testimonials} />
       <VisaFaq />
       <SocialFeed 
         instagramUrl={settings?.instagramUrl} 
