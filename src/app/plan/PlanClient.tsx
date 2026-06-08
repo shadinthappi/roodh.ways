@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Clock, Wallet, Users, Compass, ChevronDown, Check, Loader2, X, Sun, Moon, Sunset } from "lucide-react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
 import ItineraryCard from "@/components/ItineraryCard";
 // Filter options for existing itineraries
@@ -58,6 +59,8 @@ export default function PlanClient({ itineraries, footer }: { itineraries: any[]
   const [bookingStatus, setBookingStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [bookingId, setBookingId] = useState("");
 
+  const searchParams = useSearchParams();
+
   const resultRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -69,6 +72,19 @@ export default function PlanClient({ itineraries, footer }: { itineraries: any[]
     }, 2500);
     return () => clearInterval(interval);
   }, [aiMode]);
+
+  // Handle direct booking from other pages
+  useEffect(() => {
+    const shouldBook = searchParams.get("book");
+    const destination = searchParams.get("destination");
+    
+    if (shouldBook === "true") {
+      setShowBooking(true);
+      if (destination) {
+        setBookingForm(prev => ({ ...prev, notes: `I want to book a trip to: ${destination}` }));
+      }
+    }
+  }, [searchParams]);
 
   const toggleStyle = (s: string) => {
     setAiStyle((prev) => prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]);

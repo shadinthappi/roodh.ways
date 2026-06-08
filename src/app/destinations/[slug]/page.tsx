@@ -85,7 +85,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
             ))}
           </div>
           <div>
-            <Link href="/plan" className="bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold transition-colors inline-block shadow-lg">
+            <Link href={`/plan?book=true&destination=${dest.slug}`} className="bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold transition-colors inline-block shadow-lg">
               Book a Trip
             </Link>
           </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import PlanClient from "./PlanClient";
 import Footer from "@/components/Footer";
 import { sanityFetch } from "@/sanity/client";
@@ -30,5 +30,9 @@ export default async function PlanPage() {
   
   const itineraries = await sanityFetch<any[]>(query);
 
-  return <PlanClient itineraries={itineraries} footer={<Footer />} />;
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-brand-white flex items-center justify-center">Loading planner...</div>}>
+      <PlanClient itineraries={itineraries} footer={<Footer />} />
+    </Suspense>
+  );
 }

@@ -67,7 +67,7 @@ export default async function EventsPage() {
       <section className="bg-brand-dark py-24 px-6 text-center">
         <p className="text-brand-blue font-sans font-bold uppercase tracking-widest text-sm mb-6">Plan Around a Festival</p>
         <h2 className="font-heading text-5xl font-black uppercase tracking-tighter text-brand-white mb-8">Time Your<br />Perfect Trip</h2>
-        <a href="/plan" className="inline-block bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold text-lg transition-colors">
+        <a href="/plan?book=true&destination=Corporate%20Events" className="inline-block bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold text-lg transition-colors">
           Plan A Trip →
         </a>
       </section>

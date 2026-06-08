@@ -65,7 +65,7 @@ export default async function ExperiencesPage() {
         <h2 className="font-heading text-5xl md:text-6xl font-black uppercase tracking-tighter text-brand-white mb-8">
           Let Us Build<br />Your Trip
         </h2>
-        <a href="/plan" className="inline-block bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold text-lg transition-colors">
+        <a href="/plan?book=true&destination=Custom%20Experience" className="inline-block bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold text-lg transition-colors">
           Plan A Trip →
         </a>
       </section>
