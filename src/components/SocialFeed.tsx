@@ -14,7 +14,7 @@ export default function SocialFeed({ instagramUrl }: { instagramUrl?: string }) 
         const res = await fetch("https://feeds.behold.so/MKhMVFueh4ZDhCn5PWBG");
         const data = await res.json();
         if (data && data.posts) {
-          setFeed(data.posts.slice(0, 6));
+          setFeed(data.posts.slice(0, 10));
         }
       } catch (error) {
         console.error("Failed to fetch Instagram feed", error);
@@ -26,7 +26,7 @@ export default function SocialFeed({ instagramUrl }: { instagramUrl?: string }) 
   }, []);
 
   const displayPosts = loading || feed.length === 0 
-    ? Array(6).fill({ isSkeleton: true }) 
+    ? Array(10).fill({ isSkeleton: true }) 
     : feed;
 
   return (
@@ -53,49 +53,61 @@ export default function SocialFeed({ instagramUrl }: { instagramUrl?: string }) 
         </div>
 
         {/* Grid */}
-        <div className="max-w-4xl mx-auto">
-          <StaggerContainer className="grid grid-cols-3 gap-1 md:gap-6" staggerDelay={0.07}>
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 grid-flow-dense" staggerDelay={0.07}>
           {displayPosts.map((post, i) => {
             const isSkeleton = post.isSkeleton;
+            const isReel = !isSkeleton && post.mediaType === "VIDEO";
+            const isTall = isReel || (isSkeleton && (i === 1 || i === 4 || i === 8));
+            
             const imageUrl = !isSkeleton ? (post.sizes?.large?.mediaUrl || post.mediaUrl) : null;
             const linkUrl = !isSkeleton ? post.permalink : "#";
             const bgColor = !isSkeleton && post.colorPalette?.dominant ? `rgb(${post.colorPalette.dominant})` : "#1a1a1a";
 
             return (
-              <StaggerItem key={i}>
-                {isSkeleton ? (
-                  <div className="aspect-square rounded-xl bg-brand-white/5 animate-pulse" />
-                ) : (
-                  <motion.a
-                    href={linkUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block aspect-square rounded-xl overflow-hidden group cursor-pointer relative shadow-md"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.2 }}
-                    style={{ backgroundColor: bgColor }}
-                  >
-                    {imageUrl && (
-                      <img 
-                        src={imageUrl} 
-                        alt={post.prunedCaption || "Instagram post"} 
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <svg className="w-8 h-8 text-brand-white drop-shadow-md" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                        <circle cx="12" cy="13" r="4"></circle>
-                      </svg>
-                    </div>
-                  </motion.a>
-                )}
+              <StaggerItem key={i} className={isTall ? "row-span-2" : "row-span-1"}>
+                <motion.a
+                  href={linkUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`block w-full h-full rounded-xl overflow-hidden group cursor-pointer relative shadow-md ${!isTall ? "aspect-square" : "min-h-[250px]"}`}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                  style={{ backgroundColor: bgColor }}
+                >
+                  {isSkeleton ? (
+                    <div className="absolute inset-0 bg-brand-white/5 animate-pulse" />
+                  ) : (
+                    <>
+                      {imageUrl && (
+                        <img 
+                          src={imageUrl} 
+                          alt={post.prunedCaption || "Instagram post"} 
+                          className="w-full h-full object-cover absolute inset-0"
+                          loading="lazy"
+                        />
+                      )}
+                      {/* Reel Icon Overlay */}
+                      {isReel && (
+                        <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md rounded-full p-2 z-10 text-white shadow-sm">
+                          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      )}
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
+                        <svg className="w-8 h-8 text-brand-white drop-shadow-md" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                          <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                      </div>
+                    </>
+                  )}
+                </motion.a>
               </StaggerItem>
             );
           })}
-          </StaggerContainer>
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
