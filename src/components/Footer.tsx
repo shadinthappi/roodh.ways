@@ -42,7 +42,9 @@ export default async function Footer() {
   const settings = await sanityFetch<any>(SITE_SETTINGS_QUERY).catch(() => null);
 
   return (
-    <footer className="bg-brand-dark text-brand-white pt-20 pb-10">
+    <footer className="bg-brand-dark text-brand-white pt-20 pb-10 relative">
+      {/* Decorative Top Border */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-sand to-transparent opacity-50" />
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
         
         {/* Newsletter Section */}
