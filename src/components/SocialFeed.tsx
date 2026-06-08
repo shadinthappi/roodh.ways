@@ -86,9 +86,9 @@ export default function SocialFeed({ instagramUrl, feedImages }: { instagramUrl?
                 whileHover={{ scale: 0.98 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
               >
-                {post.image ? (
+                {(post as any).image ? (
                   <Image 
-                    src={urlFor(post.image).url()} 
+                    src={urlFor((post as any).image).url()} 
                     alt={post.tag || "Social Feed"} 
                     fill 
                     unoptimized 
