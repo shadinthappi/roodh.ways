@@ -11,19 +11,24 @@ import { productType } from "./productType";
 import { siteSettingsType } from "./siteSettingsType";
 import { calendarEventType } from "./calendarEventType";
 import { aiLogType } from "./aiLogType";
+import { agentTaskType } from "./agentTaskType";
+import { SchemaTypeDefinition } from "sanity";
 
-export const schemaTypes = [
-  siteSettingsType,
-  destinationType,
-  experienceType,
-  storyType,
-  routeType,
-  eventType,
-  itineraryType,
-  bookingType,
-  analyticsEventType,
-  internationalTripType,
-  productType,
-  calendarEventType,
-  aiLogType,
-];
+export const schema: { types: SchemaTypeDefinition[] } = {
+  types: [
+    destinationType,
+    experienceType,
+    routeType,
+    itineraryType,
+    internationalTripType,
+    productType,
+    bookingType,
+    storyType,
+    eventType,
+    siteSettingsType,
+    analyticsEventType,
+    calendarEventType,
+    aiLogType,
+    agentTaskType,
+  ],
+};

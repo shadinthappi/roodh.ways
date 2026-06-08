@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import CRMVisuals from "./components/CRMVisuals";
+import KanbanBoard from "./components/KanbanBoard";
+import TaskManager from "./components/TaskManager";
+import ExcelExportButton from "./components/ExcelExportButton";
 
 interface RecentDoc {
   _id: string;
@@ -14,6 +18,8 @@ interface RecentDoc {
 
 export default function AdminOverview() {
   const [recentDocs, setRecentDocs] = useState<RecentDoc[]>([]);
+  const [leads, setLeads] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({
     destinations: 0,
@@ -43,6 +49,18 @@ export default function AdminOverview() {
           const docsData = await docsRes.json();
           setRecentDocs(docsData);
         }
+
+        const leadsRes = await fetch("/api/admin/leads");
+        if (leadsRes.ok) {
+          const leadsData = await leadsRes.json();
+          setLeads(leadsData);
+        }
+
+        const tasksRes = await fetch("/api/admin/tasks");
+        if (tasksRes.ok) {
+          const tasksData = await tasksRes.json();
+          setTasks(tasksData);
+        }
       } catch (err) {
         console.error("Failed to load dashboard overview data", err);
       } finally {
@@ -58,13 +76,16 @@ export default function AdminOverview() {
 
   return (
     <div className="space-y-12">
-      <div className="max-w-3xl">
-        <h2 className="text-3xl font-heading font-black uppercase tracking-tight text-brand-dark">
-          Dashboard Overview
-        </h2>
-        <p className="text-brand-dark/85 mt-2 font-sans font-medium">
-          Manage your travel collections, create new destinations, and view recent updates.
-        </p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div className="max-w-3xl">
+          <h2 className="text-3xl font-heading font-black uppercase tracking-tight text-brand-dark">
+            CRM Dashboard Overview
+          </h2>
+          <p className="text-brand-dark/85 mt-2 font-sans font-medium">
+            Manage your travel pipeline, track conversions, and view detailed analytics.
+          </p>
+        </div>
+        {!isLoading && <ExcelExportButton leads={leads} stats={stats} />}
       </div>
 
       {/* Traffic & Conversions Dashboard */}
@@ -94,6 +115,12 @@ export default function AdminOverview() {
         </div>
       </div>
 
+      {/* Recharts Visualizations */}
+      {!isLoading && <CRMVisuals leads={leads} stats={stats} />}
+
+      {/* Lead Pipeline Kanban Board */}
+      {!isLoading && <KanbanBoard initialLeads={leads} />}
+
       {/* Grid of stats cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         {[
@@ -118,11 +145,11 @@ export default function AdminOverview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Quick Actions */}
-        <div className="space-y-6">
+        {/* Quick Actions & Task Manager */}
+        <div className="space-y-6 flex flex-col h-full">
           <div className="bg-brand-white border border-brand-dark/10 rounded-2xl p-6">
             <h3 className="text-sm font-bold uppercase tracking-wider text-brand-dark mb-4">Quick Creation</h3>
-            <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
               {[
                 { label: "New Destination", type: "destination" },
                 { label: "New Experience", type: "experience" },
@@ -136,12 +163,16 @@ export default function AdminOverview() {
                 <Link
                   key={act.label}
                   href={`/admin/${act.type}s/new`}
-                  className="block w-full p-3 rounded-lg bg-brand-offwhite hover:bg-brand-blue/10 hover:text-brand-blue text-sm font-semibold text-brand-dark transition-colors"
+                  className="block w-full p-3 rounded-lg bg-brand-offwhite hover:bg-brand-blue/10 hover:text-brand-blue text-[10px] font-bold uppercase tracking-wider text-brand-dark transition-colors text-center"
                 >
-                  + {act.label}
+                  + {act.label.replace("New ", "")}
                 </Link>
               ))}
             </div>
+          </div>
+          
+          <div className="flex-1 min-h-[300px]">
+             {!isLoading && <TaskManager initialTasks={tasks} />}
           </div>
         </div>
 
