@@ -45,7 +45,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-brand-white">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 font-heading text-3xl font-bold uppercase tracking-wide drop-shadow-lg">
-            <Image src="/logo-white.png" alt="Roodh.ways Logo" width={48} height={48} className="object-contain" />
+            <Image src="/logo-white.png" alt="Roodh.ways Logo" width={32} height={32} className="object-contain" />
             <span className="hidden sm:inline-block">roodh.ways</span>
           </Link>
 
