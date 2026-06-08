@@ -1,6 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import OpenChatButton from "@/components/OpenChatButton";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { sanityFetch } from "@/sanity/client";
@@ -85,9 +86,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
             ))}
           </div>
           <div>
-            <Link href={`/plan?book=true&destination=${dest.slug}`} className="bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold transition-colors inline-block shadow-lg">
-              Book a Trip
-            </Link>
+            <OpenChatButton destination={dest.name} className="bg-brand-blue hover:bg-brand-blue/80 text-brand-white px-10 py-4 rounded-full font-heading uppercase tracking-wider font-bold transition-colors inline-block shadow-lg" />
           </div>
         </div>
       </section>

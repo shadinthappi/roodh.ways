@@ -42,6 +42,23 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
 
+  // Listen for external open events
+  useEffect(() => {
+    const handleOpenChat = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setIsOpen(true);
+      if (customEvent.detail?.destination) {
+        setMessages(prev => [
+          ...prev, 
+          { role: "bot", text: `I see you're interested in ${customEvent.detail.destination}! I can help you plan your trip or you can go straight to booking.` },
+          { role: "bot", text: "[SHOW_LEAD_FORM]" }
+        ]);
+      }
+    };
+    window.addEventListener("open-chat", handleOpenChat);
+    return () => window.removeEventListener("open-chat", handleOpenChat);
+  }, []);
+
   // Don't render anything while loading or if disabled
   if (isEnabled === null || isEnabled === false) return null;
 
