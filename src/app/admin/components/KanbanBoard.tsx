@@ -130,7 +130,12 @@ export default function KanbanBoard({ initialLeads }: { initialLeads: any[] }) {
             <DroppableColumn
               key={stage}
               stage={stage}
-              leads={leads.filter((l) => (l.status || "New Lead") === stage)}
+              leads={leads.filter((l) => {
+                const currentStatus = l.status || "New Lead";
+                // Map legacy "Pending" status to "New Lead"
+                if (stage === "New Lead" && currentStatus === "Pending") return true;
+                return currentStatus === stage;
+              })}
             />
           ))}
         </DndContext>
