@@ -91,7 +91,8 @@ export default async function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-brand-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div className="font-heading text-2xl font-bold uppercase tracking-wide">
+        <div className="flex items-center gap-3 font-heading text-2xl font-bold uppercase tracking-wide">
+          <img src="/logo-white.png" alt="Roodh.ways Logo" width="32" height="32" className="object-contain" />
           roodh.ways
         </div>
         

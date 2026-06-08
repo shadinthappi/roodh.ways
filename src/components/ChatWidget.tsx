@@ -111,8 +111,8 @@ export default function ChatWidget() {
           {/* Header */}
           <div className="bg-brand-dark p-4 flex justify-between items-center text-brand-white">
             <div className="flex items-center gap-3">
-              <div className="bg-brand-white/20 p-1.5 rounded-full">
-                <Image src="/logo-white.png" alt="Logo" width={16} height={16} className="opacity-90" />
+              <div className="bg-brand-white/20 p-2 rounded-full">
+                <Image src="/logo-white.png" alt="Logo" width={24} height={24} className="opacity-90" />
               </div>
               <div>
                 <span className="font-heading font-bold uppercase tracking-wider text-sm block">Roodh.ways Guide</span>
@@ -267,17 +267,17 @@ export default function ChatWidget() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`group relative text-brand-white rounded-full w-16 h-16 flex items-center justify-center shadow-2xl hover:scale-105 transition-all duration-300 ${
+        className={`group relative text-brand-white rounded-full w-20 h-20 flex items-center justify-center shadow-2xl hover:scale-105 transition-all duration-300 ${
           isOpen ? "bg-brand-dark" : "bg-brand-blue hover:bg-brand-blue/90"
         }`}
         aria-label="Toggle Chat"
       >
         {isOpen ? (
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          <Image src="/logo-white.png" alt="Roodh.ways" width={28} height={28} />
+          <Image src="/logo-white.png" alt="Roodh.ways" width={40} height={40} />
         )}
         {!isOpen && (
           <span className="absolute -top-12 right-0 bg-brand-dark text-brand-white text-xs px-4 py-2 rounded-full whitespace-nowrap font-sans font-bold opacity-0 group-hover:opacity-100 transition-all shadow-lg translate-y-2 group-hover:translate-y-0">
