@@ -9,8 +9,9 @@ import ArticleCarousel from "@/components/ArticleCarousel";
 import VisaFaq from "@/components/VisaFaq";
 import DestinationStrips from "@/components/DestinationStrips";
 import SocialFeed from "@/components/SocialFeed";
-import NewsletterSignup from "@/components/NewsletterSignup";
 import Footer from "@/components/Footer";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 
 export default async function Home() {
   const featuredQuery = groq`*[_type == "destination" && isFeatured == true] | order(_createdAt desc) {
@@ -22,7 +23,15 @@ export default async function Home() {
     mainImage
   }`;
   
-  const featuredDestinations = await sanityFetch<any[]>(featuredQuery);
+  const storiesQuery = groq`*[_type == "story" && isPublished == true] | order(publishedAt desc)[0...6] {
+    title, "slug": slug.current, category, excerpt, coverImage, themeColor, readTime
+  }`;
+
+  const [featuredDestinations, settings, stories] = await Promise.all([
+    sanityFetch<any[]>(featuredQuery).catch(() => []),
+    sanityFetch<any>(SITE_SETTINGS_QUERY).catch(() => null),
+    sanityFetch<any[]>(storiesQuery).catch(() => [])
+  ]);
 
   return (
     <main className="relative bg-brand-white w-full min-h-screen">
@@ -31,11 +40,12 @@ export default async function Home() {
       <IntroBlock />
       <RegionMap />
       <ScrollShowcase />
-      <ArticleCarousel />
+      <ArticleCarousel stories={stories} />
+      <TestimonialsSection />
       <VisaFaq />
       <DestinationStrips />
-      <SocialFeed />
-      <NewsletterSignup />
+      <SocialFeed instagramUrl={settings?.instagramUrl} />
+
       <Footer />
     </main>
   );

@@ -37,7 +37,7 @@ function DestinationsContent({ destinations }: { destinations: any[] }) {
     setActiveCategory(newCat);
   };
 
-  const filtered = destinations.filter((d) => {
+  const filtered = (destinations || []).filter((d) => {
     const regionMatch = activeRegion === "All" || d.region === activeRegion;
     const catMatch = !activeCategory || (d.categories && d.categories.includes(activeCategory));
     return regionMatch && catMatch;

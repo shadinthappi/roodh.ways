@@ -1,16 +1,21 @@
 "use client";
 import React, { useRef } from "react";
 
-const articles = [
-  { category: "Heritage", title: "The Majestic Forts of Rajasthan", desc: "Explore the golden sandstone fortresses that rise from the Thar Desert.", color: "bg-[#C0392B]" },
-  { category: "Nature", title: "Kerala Backwaters: A Houseboat Dream", desc: "Glide through serene lagoons and lush paddy fields on a traditional kettuvallam.", color: "bg-[#16A085]" },
-  { category: "Adventure", title: "Biking Through Spiti Valley", desc: "One of the world's most extreme motorcycle routes, through high-altitude Himalayan deserts.", color: "bg-[#7F8C8D]" },
-  { category: "Spiritual", title: "Dawn on the Ganges", desc: "Witnessing the morning Ganga Aarti in Varanasi is a transcendental experience.", color: "bg-[#3D2B1F]" },
-  { category: "Food & Culture", title: "A Culinary Tour of India", desc: "From butter chicken in Delhi to dosas in Chennai — India is a food lover's paradise.", color: "bg-[#D35400]" },
-  { category: "Beaches", title: "Goa Beyond the Beaches", desc: "Spice plantations, Portuguese cathedrals, and hidden jungle waterfalls await.", color: "bg-[#1A3A4A]" },
-];
+import Image from "next/image";
+import { urlFor } from "@/sanity/image";
+import Link from "next/link";
 
-export default function ArticleCarousel() {
+interface Story {
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  coverImage?: any;
+  themeColor?: string;
+  readTime?: string;
+}
+
+export default function ArticleCarousel({ stories = [] }: { stories?: Story[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: "left" | "right") => {
@@ -42,32 +47,42 @@ export default function ArticleCarousel() {
 
         {/* Scrollable Cards */}
         <div ref={scrollRef} className="flex gap-6 overflow-x-auto pb-4 snap-x scroll-smooth" style={{ scrollbarWidth: "none" }}>
-          {articles.map((article, i) => (
+          {stories.map((article, i) => (
             <div
               key={i}
-              className="snap-start shrink-0 w-[300px] md:w-[360px] rounded-2xl overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-shadow"
+              className="snap-start shrink-0 w-[300px] md:w-[360px] rounded-2xl overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-shadow flex flex-col"
             >
-              {/* Image Placeholder */}
-              <div className={`w-full h-56 ${article.color} flex items-center justify-center relative`}>
-                <p className="text-brand-white/30 font-heading text-lg uppercase tracking-widest">[ Photo ]</p>
-                <span className="absolute top-4 left-4 bg-brand-white/20 backdrop-blur text-brand-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full font-sans">
-                  {article.category}
+              {/* Image */}
+              <div className={`w-full h-56 ${article.themeColor || "bg-brand-blue"} flex items-center justify-center relative shrink-0`}>
+                {article.coverImage ? (
+                  <Image src={urlFor(article.coverImage).url()} alt={article.title} fill unoptimized className="object-cover absolute inset-0 transition-transform duration-500 group-hover:scale-105 z-0" />
+                ) : (
+                  <p className="text-brand-white/30 font-heading text-lg uppercase tracking-widest">[ Photo ]</p>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-0 opacity-50" />
+                <span className="absolute top-4 left-4 z-10 bg-brand-white/20 backdrop-blur text-brand-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full font-sans shadow-sm">
+                  {article.category || "Story"}
                 </span>
               </div>
               {/* Text */}
-              <div className="p-6 bg-brand-offwhite group-hover:bg-brand-dark group-hover:text-brand-white transition-colors">
+              <div className="p-6 bg-brand-offwhite group-hover:bg-brand-dark group-hover:text-brand-white transition-colors flex-grow flex flex-col">
                 <h3 className="font-heading text-xl uppercase tracking-wide font-bold mb-2 leading-tight group-hover:text-brand-sand transition-colors">
                   {article.title}
                 </h3>
-                <p className="font-sans text-sm text-brand-dark/60 group-hover:text-brand-white/70 transition-colors leading-relaxed">
-                  {article.desc}
+                <p className="font-sans text-sm text-brand-dark/60 group-hover:text-brand-white/70 transition-colors leading-relaxed flex-grow">
+                  {article.excerpt || "Read more about this beautiful journey..."}
                 </p>
-                <div className="mt-4 text-brand-blue group-hover:text-brand-sand font-bold font-sans text-sm uppercase tracking-widest transition-colors">
+                <Link href={`/stories/${article.slug}`} className="mt-4 text-brand-blue group-hover:text-brand-sand font-bold font-sans text-sm uppercase tracking-widest transition-colors self-start">
                   Read More →
-                </div>
+                </Link>
               </div>
             </div>
           ))}
+          {stories.length === 0 && (
+            <div className="w-full text-center py-12 text-brand-dark/40 font-sans">
+              More stories coming soon!
+            </div>
+          )}
         </div>
       </div>
     </section>

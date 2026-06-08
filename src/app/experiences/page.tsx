@@ -6,6 +6,12 @@ import ExperienceTile from "@/components/ExperienceTile";
 import { sanityFetch } from "@/sanity/client";
 import { groq } from "next-sanity";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Experiences | roodh.ways",
+  description: "Find the experience that speaks to your soul, from ancient temples to alpine adventures."
+};
 
 export const revalidate = 60; // revalidate every minute
 

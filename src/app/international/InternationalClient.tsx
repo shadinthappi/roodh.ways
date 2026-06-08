@@ -2,7 +2,6 @@ import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ItineraryCard from "@/components/ItineraryCard";
-import NewsletterSignup from "@/components/NewsletterSignup";
 import { urlFor } from "@/sanity/image";
 import Image from "next/image";
 
@@ -48,6 +47,7 @@ export default function InternationalClient({ trips, heroImage }: { trips: any[]
                 budget={trip.currency || "Various"}
                 group={trip.visaRequirement || "Check Visa Requirements"}
                 basePath="/international"
+                price={trip.priceFrom}
               />
             ))}
           </div>
@@ -60,7 +60,7 @@ export default function InternationalClient({ trips, heroImage }: { trips: any[]
         </div>
       </section>
 
-      <NewsletterSignup />
+
       <Footer />
     </main>
   );

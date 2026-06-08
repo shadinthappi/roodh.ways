@@ -5,6 +5,12 @@ import PageHero from "@/components/PageHero";
 import VisaFaq from "@/components/VisaFaq";
 import { sanityFetch } from "@/sanity/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Visa & Entry | roodh.ways",
+  description: "Everything you need to know about getting your Indian visa quickly and securely."
+};
 
 const visaTypes = [
   { name: "e-Tourist Visa", duration: "30 days / 1 year / 5 years", icon: (

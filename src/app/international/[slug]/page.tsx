@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import ShareTrip from "@/components/ShareTrip";
 import { sanityFetch } from "@/sanity/client";
 import { groq, PortableText } from "next-sanity";
 import { urlFor } from "@/sanity/image";
@@ -101,7 +101,7 @@ export default async function InternationalDetailPage({ params }: { params: Prom
         </div>
       </section>
 
-      <NewsletterSignup />
+
       <Footer />
     </main>
   );

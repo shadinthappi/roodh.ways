@@ -16,9 +16,10 @@ interface ItineraryCardProps {
   description: string;
   coverImage?: any;
   basePath?: string;
+  price?: string;
 }
 
-export default function ItineraryCard({ title, slug, duration, style, budget, group, stops, themeColor, color, description, coverImage, basePath = "/plan" }: ItineraryCardProps) {
+export default function ItineraryCard({ title, slug, duration, style, budget, group, stops, themeColor, color, description, coverImage, basePath = "/plan", price }: ItineraryCardProps) {
   const cardColor = themeColor || color || "bg-brand-blue";
   
   return (
@@ -32,9 +33,21 @@ export default function ItineraryCard({ title, slug, duration, style, budget, gr
           </>
         )}
         {!coverImage && (
-          <div className="absolute inset-0 flex items-center justify-center z-0">
-            <p className="text-brand-white/20 font-heading text-lg uppercase tracking-widest">[ Map ]</p>
-          </div>
+          <>
+            <div className="absolute inset-0 bg-black/10 z-0">
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="opacity-20 text-brand-white mix-blend-overlay">
+                <defs>
+                  <pattern id="topo" width="80" height="80" patternUnits="userSpaceOnUse">
+                    <path d="M0 40 Q 20 20, 40 40 T 80 40" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M0 60 Q 20 40, 40 60 T 80 60" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.7" />
+                    <path d="M0 20 Q 20 0, 40 20 T 80 20" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.7" />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#topo)" />
+              </svg>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-0" />
+          </>
         )}
         {/* Stop pills */}
         <div className="relative z-10 flex flex-wrap gap-2">
@@ -58,6 +71,11 @@ export default function ItineraryCard({ title, slug, duration, style, budget, gr
         <h3 className="font-heading text-2xl font-black uppercase tracking-tight text-brand-dark group-hover:text-brand-white transition-colors mb-2">
           {title}
         </h3>
+        {price && (
+          <div className="font-sans font-bold text-sm text-brand-dark/80 group-hover:text-brand-white/80 transition-colors mb-3">
+            Starting from <span className="text-brand-blue group-hover:text-brand-sand transition-colors">₹{price}</span>
+          </div>
+        )}
         <p className="font-sans text-sm text-brand-dark/60 group-hover:text-brand-white/60 transition-colors leading-relaxed mb-4 flex-grow">
           {description}
         </p>

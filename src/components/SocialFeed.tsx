@@ -14,7 +14,7 @@ const posts = [
   { tag: "Mumbai", color: "bg-[#2C3E50]" },
 ];
 
-export default function SocialFeed() {
+export default function SocialFeed({ instagramUrl }: { instagramUrl?: string }) {
   return (
     <section className="w-full bg-brand-dark py-24 px-6">
       <div className="max-w-7xl mx-auto">
@@ -31,7 +31,7 @@ export default function SocialFeed() {
             </FadeIn>
           </div>
           <FadeIn delay={0.2} direction="left">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+            <a href={instagramUrl || "https://instagram.com"} target="_blank" rel="noopener noreferrer"
               className="border-2 border-brand-white text-brand-white px-8 py-3 rounded-full font-heading uppercase tracking-wider font-bold hover:bg-brand-white hover:text-brand-dark transition-colors">
               Follow on Instagram
             </a>

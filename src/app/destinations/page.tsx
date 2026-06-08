@@ -6,6 +6,12 @@ import DestinationsClient from "./DestinationsClient";
 import { sanityFetch } from "@/sanity/client";
 import { groq } from "next-sanity";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Destinations | roodh.ways",
+  description: "Explore incredible Indian destinations from the Himalayas to the backwaters."
+};
 
 export const revalidate = 60; // revalidate every minute
 
@@ -24,8 +30,8 @@ export default async function DestinationsPage() {
   }`;
   
   const [destinations, settings] = await Promise.all([
-    sanityFetch<any[]>(query),
-    sanityFetch<any>(SITE_SETTINGS_QUERY)
+    sanityFetch<any[]>(query).catch(() => []),
+    sanityFetch<any>(SITE_SETTINGS_QUERY).catch(() => null)
   ]);
 
   return (

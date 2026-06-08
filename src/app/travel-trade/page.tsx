@@ -4,6 +4,12 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import { sanityFetch } from "@/sanity/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Travel Trade | roodh.ways",
+  description: "Partner with roodh.ways for premium, hand-crafted Indian experiences for your clients."
+};
 
 const benefits = [
   { icon: (

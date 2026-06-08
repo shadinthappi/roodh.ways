@@ -3,6 +3,12 @@ import PlanClient from "./PlanClient";
 import Footer from "@/components/Footer";
 import { sanityFetch } from "@/sanity/client";
 import { groq } from "next-sanity";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Trip Planner | roodh.ways",
+  description: "Curated Indian itineraries and packages designed for every budget and style."
+};
 
 export const revalidate = 60;
 

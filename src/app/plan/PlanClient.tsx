@@ -5,8 +5,6 @@ import { MapPin, Clock, Wallet, Users, Compass, ChevronDown, Check, Loader2, X, 
 import Image from "next/image";
 import Header from "@/components/Header";
 import ItineraryCard from "@/components/ItineraryCard";
-import NewsletterSignup from "@/components/NewsletterSignup";
-
 // Filter options for existing itineraries
 const budgets = ["Any Budget", "Budget-Friendly", "Mid-Range", "Luxury", "Premium"];
 const durations = ["Any Duration", "3–5 Days", "6–8 Days", "9–12 Days", "2+ Weeks"];
@@ -675,7 +673,7 @@ export default function PlanClient({ itineraries, footer }: { itineraries: any[]
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {filtered.map((itin) => (
-              <ItineraryCard key={itin.slug} {...itin} />
+              <ItineraryCard key={itin.slug} {...itin} price={itin.priceFrom} />
             ))}
           </div>
           {filtered.length === 0 && (
@@ -686,7 +684,7 @@ export default function PlanClient({ itineraries, footer }: { itineraries: any[]
         </div>
       </section>
 
-      <NewsletterSignup />
+
       {footer}
     </main>
   );
