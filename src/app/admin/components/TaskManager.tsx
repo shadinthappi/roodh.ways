@@ -78,13 +78,13 @@ export default function TaskManager({ initialTasks }: { initialTasks: any[] }) {
       </form>
 
       <div className="flex-1 overflow-y-auto space-y-2 min-h-[200px]">
-        {tasks.length === 0 ? (
+        {tasks.filter(t => !t.isCompleted).length === 0 ? (
           <div className="text-center text-xs font-medium text-brand-dark/40 py-8">
             No tasks found. You're all caught up!
           </div>
         ) : (
-          tasks.map(task => (
-            <div key={task._id} className="flex items-start gap-3 p-3 hover:bg-brand-offwhite rounded-lg transition-colors group">
+          tasks.filter(t => !t.isCompleted).map(task => (
+            <div key={task._id} className="flex items-start gap-3 p-3 hover:bg-brand-offwhite rounded-lg transition-colors group animate-[fadeIn_0.3s_ease-out]">
               <button 
                 onClick={() => handleToggle(task._id, task.isCompleted)}
                 className={`w-5 h-5 mt-0.5 rounded border flex items-center justify-center shrink-0 transition-colors ${task.isCompleted ? 'bg-green-500 border-green-500 text-white' : 'border-brand-dark/30 text-transparent hover:border-brand-blue'}`}
